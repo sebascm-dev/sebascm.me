@@ -1,11 +1,17 @@
-### TAREAS A REALIZAR EN ESTE PROYECTO
+# TAREAS A REALIZAR EN ESTE PROYECTO
+
+## COMPONENTE BACKGROUND (COMPLETADO)
+- [X] Creación del componente
+- [X] Creación de las líneas y color de fondo
+- [X] Creación de las tecnologías
+- [X] Creación de la animación
 
 ## COMPONENTE PERFIL
-- [ ] IMAGEN DEL USUARIO
-- [ ] NOMBRE DEL USUARIO
-- [ ] DESCRIPCIÓN CORTA DEL USUARIO
-- [x] DISPONIBILIDAD DEL USUARIO
-- [ ] REDES SOCIALES
+- [ ] Imagen del usuario
+- [ ] Nombre del usuario
+- [ ] Descripción corta del usuario
+- [ ] Disponibilidad del usuario
+- [ ] Redes sociales
 
-## === HACER COMO ÚLTIMA TAREA ===
-- [ ] README.MD
+## HACER COMO ÚLTIMA TAREA
+- [ ] README.md
