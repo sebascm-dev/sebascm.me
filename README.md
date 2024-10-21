@@ -7,14 +7,14 @@
 - [X] Creación de la animación
 
 ## PAGINA HOME DEL PORTFOLIO
-- [ ] MARGENES AJUSTADOS
+- [X] MARGENES AJUSTADOS
 - [ ] COMPONENTE PERFIL
 
 ## COMPONENTE PERFIL
-- [ ] Imagen del usuario
-- [ ] Nombre del usuario
-- [ ] Descripción corta del usuario
-- [ ] Disponibilidad del usuario
+- [X] Imagen del usuario
+- [X] Nombre del usuario
+- [X] Descripción corta del usuario
+- [X] Disponibilidad del usuario
 - [ ] Redes sociales
 
 ## HACER COMO ÚLTIMA TAREA
