@@ -6,6 +6,10 @@
 - [X] Creación de las tecnologías
 - [X] Creación de la animación
 
+## PAGINA HOME DEL PORTFOLIO
+- [ ] MARGENES AJUSTADOS
+- [ ] COMPONENTE PERFIL
+
 ## COMPONENTE PERFIL
 - [ ] Imagen del usuario
 - [ ] Nombre del usuario
