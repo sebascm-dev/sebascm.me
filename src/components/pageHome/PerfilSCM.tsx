@@ -1,5 +1,3 @@
-'use client';
-
 import Image from "next/image";
 
 import InstagramLink from "@/components/linksSociales/InstagramLink";
