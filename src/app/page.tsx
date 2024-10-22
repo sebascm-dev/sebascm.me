@@ -1,5 +1,4 @@
 import PerfilSCM from "@/components/pageHome/PerfilSCM";
-import Image from "next/image";
 
 export default function Home() {
   return (
