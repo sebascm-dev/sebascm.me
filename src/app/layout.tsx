@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import BackgroundWeb from "@/components/BackgroundWeb";
+import Dock from "../components/pageHome/Dock";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -31,6 +32,7 @@ export default function RootLayout({
       >
         <BackgroundWeb />
         {children}
+        <Dock />
       </body>
     </html>
   );

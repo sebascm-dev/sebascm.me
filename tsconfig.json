@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "target": "es2015", // Puedes también poner es2017, es2020, etc.
+    "lib": ["dom", "dom.iterable", "esnext", "es2015"],
+    "downlevelIteration": true,
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
