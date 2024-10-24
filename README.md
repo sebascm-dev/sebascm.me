@@ -8,14 +8,16 @@
 
 ## PAGINA HOME DEL PORTFOLIO
 - [X] MARGENES AJUSTADOS
-- [ ] COMPONENTE PERFIL
+- [X] COMPONENTE PERFIL
+- [ ] DOC ESTILO MACOS COMO MENU
 
 ## COMPONENTE PERFIL
 - [X] Imagen del usuario
 - [X] Nombre del usuario
 - [X] Descripción corta del usuario
 - [X] Disponibilidad del usuario
-- [ ] Redes sociales
+- [X] Redes sociales
+- [X] Estados para saber como esta el usuario
 
 ## HACER COMO ÚLTIMA TAREA
 - [ ] README.md
