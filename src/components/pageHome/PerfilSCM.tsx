@@ -10,7 +10,6 @@ import MailLink from "../linksSociales/MailLink";
 import ReadCVLink from "../linksSociales/ReadCVLink";
 
 import Estudiando from "./EstadoActual/Estudiando";
-import Disponible from './EstadoActual/Disponible';
 
 export default async function PerfilSCM() {
     const supabase = createServerComponentClient({ cookies })
