@@ -2,7 +2,7 @@
 
 import { MotionValue, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import { useRef, useState } from "react";
-import Link from "next/link";
+import {Link} from 'next-view-transitions';
 import { usePathname } from 'next/navigation'; // Importa el hook para obtener la URL actual
 
 export default function Dock() {
