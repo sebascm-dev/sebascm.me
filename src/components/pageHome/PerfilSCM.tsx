@@ -47,8 +47,8 @@ export default async function PerfilSCM() {
                         <h1 className="font-bold text-2xl mt-2">{dato.nombre} {dato.apellido1}</h1>
                         <p className='text-[12px] mt-4 text-gray-100/50'>{calcularEdad(dato.f_nacimiento)} años</p>
                     </div>
-                    <p className="mt-1 text-[#D1D0D1]">{dato.descripcion1}</p>
-                    <p className="text-[#D1D0D1]">{dato.descripcion2}</p>
+                    <p className="mt-1 text-[#D1D0D1] max-w-sm">{dato.descripcion1}</p>
+                    <p className="mt-1 text-[#D1D0D1] max-w-sm">{dato.descripcion2}</p>
 
                     {/* Estado actual */}
                     <Estudiando texto={dato.estado} />
