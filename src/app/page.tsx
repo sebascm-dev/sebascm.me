@@ -16,7 +16,6 @@ export default function Home() {
 
         <section className="mt-32 flex justify-around gap-4">
           <UltimoPost />
-          <UltimoPost />
         </section>
       </main>
     </>
