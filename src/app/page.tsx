@@ -14,7 +14,8 @@ export default function Home() {
         {/* COMPONENTE SIMPLE DE MI PERFIL */}
         <PerfilSCM />
 
-        <section className="mt-32 flex justify-between gap-4">
+        <section className="mt-32 flex flex-col md:flex-row justify-between gap-4">
+          <UltimoPost />
           <UltimoPost />
         </section>
       </main>
