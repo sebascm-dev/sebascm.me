@@ -30,7 +30,7 @@ export default async function Blog() {
               const tagsArray = post.tags.split(',').map((tag: string) => tag.trim());
 
               return (
-                <Link href={`/blog/posts/${post.id}`} key={post.id}>
+                <Link href={`/blog/posts/${post.id}-${encodeURIComponent(post.titulo)}`} key={post.id}>
                   <article className='border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] hover:border-[#EDEDED]/30 transition-colors duration-300 mb-6'>
                     <p className='text-sm text-gray-100/50 border-l-2 border-white/70 px-2 mb-4 h-5'>{fechaFormateada}</p>
                     <h1 className='font-semibold mb-1'>{post.titulo}</h1>
