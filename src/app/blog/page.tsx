@@ -4,7 +4,10 @@ import { cookies } from "next/headers";
 
 export default async function Blog() {
   const supabase = createServerComponentClient({ cookies });
-  const { data: posts } = await supabase.from('posts').select();
+  const { data: posts } = await supabase
+        .from('posts')
+        .select()
+        .order('created_at', { ascending: false })
 
   return (
     <>
