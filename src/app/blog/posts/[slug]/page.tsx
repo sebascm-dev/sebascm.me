@@ -62,7 +62,7 @@ export default async function Post({ params }: PostProps) {
       <p className='text-sm text-gray-100/50 border-l-2 border-white/70 px-2 mb-4 h-5 tabular-nums'>{fechaFormateada}</p>
 
       <h1 className="text-4xl mt-6 font-bold">{post.titulo}</h1>
-      <section className='flex flex-row gap-6'>
+      <section className='flex flex-row gap-2 md:gap-6'>
         <div className='flex flex-row gap-1 items-center mt-2'>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-antenna-bars-5">
             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -137,8 +137,21 @@ export default async function Post({ params }: PostProps) {
           prose-blockquote:text-amber-200
           prose-blockquote:text-sm
           prose-img:rounded-md prose-img:aspect-auto" dangerouslySetInnerHTML={{ __html: contenidoHtml }}></article>
-          
-          <p className='mt-8 mb-32'>ATT: Sebastián Contreras Marín</p>
+
+      <footer className='mt-10 mb-32 flex flex-row items-center gap-2'>
+        <div className='size-16 relative'>
+          <img
+            src="/images/avatares/avatar_scm.webp"
+            alt="Imagen de perfil de sebascm-dev"
+            className="rounded-full border-[2px] border-[#27272A] border-opacity-100 object-cover"
+            style={{ width: '100%', height: '100%' }} // Estilos de tamaño ajustados
+          />
+        </div>
+        <div>
+          <p className='text-lg font-semibold'>Sebastián Contreras Marín</p>
+          <p className='text-xs text-gray-100/50'>Estudiante de Ingeniería Informática</p>
+        </div>
+      </footer>
     </main>
   );
 }
