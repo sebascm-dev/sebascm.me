@@ -1,6 +1,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { marked } from 'marked';
 import LikeButton from '@/components/blogposts/LikeButton';
 
 interface PostProps {
@@ -12,10 +13,8 @@ interface PostProps {
 export default async function Post({ params }: PostProps) {
   const supabase = createServerComponentClient({ cookies });
 
-  // Extrae la ID del slug
   const postId = params.slug.split("-")[0];
 
-  // Obtener el post actual
   const { data: post, error: fetchError } = await supabase
     .from('posts')
     .select()
@@ -26,17 +25,15 @@ export default async function Post({ params }: PostProps) {
     return notFound();
   }
 
-  // Incrementar las visitas en 1
   const { error: updateError } = await supabase
     .from('posts')
-    .update({ visitas: post.visitas + 1 }) // Incrementar el contador
+    .update({ visitas: post.visitas + 1 })
     .eq('id', postId);
 
   if (updateError) {
-    return; // Maneja el error según tu lógica
+    return;
   }
 
-  // Vuelve a obtener el post para verificar las visitas actualizadas
   const { data: updatedPost, error: updatedFetchError } = await supabase
     .from('posts')
     .select()
@@ -44,15 +41,17 @@ export default async function Post({ params }: PostProps) {
     .single();
 
   if (updatedFetchError || !updatedPost) {
-    // Maneja el error según tu lógica
+    return;
   }
 
   const fecha = new Date(post.fechaLanzamiento);
   const opciones = { day: '2-digit', month: 'long', year: 'numeric' } as const;
   const fechaFormateada = fecha.toLocaleDateString('es-ES', opciones);
 
-  // Dividir las tags y generar spans
   const tagsArray = post.tags.split(',').map((tag: string) => tag.trim());
+
+  // Convierte el contenido Markdown en HTML
+  const contenidoHtml = marked(post.contenido);
 
   return (
     <main className="mx-auto max-w-2xl bg-black bg-opacity-0
@@ -82,7 +81,7 @@ export default async function Post({ params }: PostProps) {
           </svg>
           <p className='text-xs mt-[1px] text-gray-100/85'>Tiempo de lectura: {post.minutosRead} min</p>
         </div>
-        <LikeButton postId={postId} initialLikes={post.likes} /> {/* Agrega el nuevo componente aquí */}
+        <LikeButton postId={postId} initialLikes={post.likes} />
       </section>
 
       <div className='flex flex-wrap gap-2 mt-5'>
@@ -95,7 +94,51 @@ export default async function Post({ params }: PostProps) {
 
       <hr className="my-16 border-0 h-[1px] bg-gradient-to-r from-transparent via-gray-400/40 to-transparent" />
 
-      <p>{post.contenido}</p>
+      {/* Renderiza el contenido Markdown convertido en HTML y aplica el estilo `prose` */}
+      <article className="
+          prose
+          prose-invert 
+          max-w-none
+          prose-sm
+          md:prose-base
+          dark:prose-invert
+          prose-h1:font-bold prose-h1:text-2xl md:prose-h1:text-5xl prose-h1:mt-12 prose-h1:mb-2 prose-h1:text-white
+          prose-h2:font-bold prose-h2:text-xl md:prose-h2:text-4xl prose-h2:mt-10 prose-h2:mb-2 prose-h2:text-white
+          prose-h3:font-bold prose-h3:text-lg md:prose-h3:text-3xl prose-h3:mt-8 prose-h3:mb-2 prose-h3:text-white
+          prose-h4:font-bold prose-h4:text-base md:prose-h4:text-2xl prose-h4:mb-2 prose-h4:text-white
+          prose-p:text-pretty prose-p:text-sm md:prose-p:text-base
+          prose-strong:text-sm md:prose-strong:text-base prose-strong:text-white
+          prose-em:text-sm md:prose-em:text-base prose-em:text-white
+          prose-a:bg-gray-100
+          prose-a:dark:bg-[#24292E]
+          prose-a:dark:text-gray-300
+          prose-a:font-medium
+          prose-a:me-2
+          prose-a:opacity-90
+          prose-a:px-2
+          prose-a:py-0.5
+          prose-a:rounded
+          prose-a:text-gray-800
+          prose-a:text-xs
+          prose-a:no-underline
+          prose-a:italic
+          prose-ul:text-sm md:prose-ul:text-base
+          prose-ol:text-sm md:prose-ol:text-base
+          prose-li:text-sm md:prose-li:text-base
+          prose-code:text-sm md:prose-code:text-base
+          md:prose-blockquote:text-base
+          prose-blockquote:bg-[#898a7e50]
+          prose-blockquote:border-amber-200
+          prose-blockquote:border-l-1
+          prose-blockquote:px-4
+          prose-blockquote:py-[1px]
+          prose-blockquote:rounded-md
+          prose-blockquote:shadow-xl
+          prose-blockquote:text-amber-200
+          prose-blockquote:text-sm
+          prose-img:rounded-md prose-img:aspect-auto" dangerouslySetInnerHTML={{ __html: contenidoHtml }}></article>
+          
+          <p className='mt-8 mb-32'>ATT: Sebastián Contreras Marín</p>
     </main>
   );
 }
