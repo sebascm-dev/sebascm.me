@@ -20,7 +20,7 @@ export default async function Blog() {
         <h1 className="text-3xl md:text-5xl text-pretty font-semibold">Escribiendo sobre programación, tips, hobbies y cosas varias.</h1>
         <p className="text-sm md:text-base mt-3 text-pretty md:mt-6 text-gray-100/75">Si quieres saber más sobre mí y conocerme un poco mejor, este es el sitio indicado. Todos estos posts también están en mi LinkedIn por si prefieres echarle un ojo.</p>
 
-        <section className='mt-12 pl-8 border-l border-white/25'>
+        <section className='mt-12 md:pl-8 md:border-l md:border-white/25'>
           {
             posts?.map((post) => {
               // Convertir la fecha a un objeto Date
