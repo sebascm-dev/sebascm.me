@@ -20,7 +20,7 @@ export default function Dock() {
         <motion.div
             onMouseMove={(e) => mouseX.set(e.pageX)}
             onMouseLeave={() => mouseX.set(Infinity)}
-            className="absolute bottom-10 left-0 right-0 z-50 mx-auto flex justify-center h-16 items-end gap-4 rounded-2xl bg-transparent border border-[#2E2D2D] px-4 pb-3 max-w-[600px] w-fit"
+            className="fixed backdrop-blur-md bottom-10 left-0 right-0 z-50 mx-auto flex justify-center h-16 items-end gap-4 rounded-2xl bg-transparent border border-[#2E2D2D] px-4 pb-3 max-w-[600px] w-fit"
         >
             {pages.map((page, i) => (
                 <AppIcon
