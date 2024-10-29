@@ -14,14 +14,36 @@ export default async function Post({ params }: PostProps) {
   // Extrae la ID del slug
   const postId = params.slug.split("-")[0];
 
-  const { data: post } = await supabase
+  // Obtener el post actual
+  const { data: post, error: fetchError } = await supabase
     .from('posts')
     .select()
     .eq('id', postId)
     .single();
 
-  if (!post) {
+  if (fetchError || !post) {
     return notFound();
+  }
+
+  // Incrementar las visitas en 1
+  const { error: updateError } = await supabase
+    .from('posts')
+    .update({ visitas: post.visitas + 1 }) // Incrementar el contador
+    .eq('id', postId);
+
+  if (updateError) {
+    return; // Maneja el error según tu lógica
+  }
+
+  // Vuelve a obtener el post para verificar las visitas actualizadas
+  const { data: updatedPost, error: updatedFetchError } = await supabase
+    .from('posts')
+    .select()
+    .eq('id', postId)
+    .single();
+
+  if (updatedFetchError || !updatedPost) {
+    // Maneja el error según tu lógica
   }
 
   const fecha = new Date(post.fechaLanzamiento);
@@ -43,13 +65,27 @@ export default async function Post({ params }: PostProps) {
 
       <section className='flex flex-row gap-6'>
         <div className='flex flex-row gap-1 items-center mt-2'>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-antenna-bars-5"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6 18l0 -3" /><path d="M10 18l0 -6" /><path d="M14 18l0 -9" /><path d="M18 18l0 -12" /></svg>
-          <p className='text-xs mt-[1px] text-gray-100/85'>{post.visitas} visitas</p>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-antenna-bars-5">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M6 18l0 -3" />
+            <path d="M10 18l0 -6" />
+            <path d="M14 18l0 -9" />
+            <path d="M18 18l0 -12" />
+          </svg>
+          <p className='text-xs mt-[1px] text-gray-100/85'>{updatedPost.visitas} visitas</p>
         </div>
         <div className='flex flex-row gap-1.5 items-center mt-2'>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-clock"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" /><path d="M12 7v5l3 3" /></svg>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-clock">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M3 12a9 9 0 1 0 18 0a9 9 0 0 0 -18 0" />
+            <path d="M12 7v5l3 3" />
+          </svg>
           <p className='text-xs mt-[1px] text-gray-100/85'>Tiempo de lectura: {post.minutosRead} min</p>
         </div>
+        <button className='flex flex-row gap-1 items-center mt-2'>
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-heart"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
+          <p className='mt-[4px] text-xs'>{post.likes}</p>
+        </button>
       </section>
 
       <div className='flex flex-wrap gap-2 mt-5'>
@@ -60,9 +96,7 @@ export default async function Post({ params }: PostProps) {
 
       <p className='mt-10 text-pretty text-gray-100/60'>{post.descripcion}</p>
 
-      <hr
-        className="my-16 border-0 h-[1px] bg-gradient-to-r from-transparent via-gray-400/40 to-transparent"
-      />
+      <hr className="my-16 border-0 h-[1px] bg-gradient-to-r from-transparent via-gray-400/40 to-transparent" />
 
       <p>{post.contenido}</p>
     </main>
