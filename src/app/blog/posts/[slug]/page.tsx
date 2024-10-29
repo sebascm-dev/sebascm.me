@@ -1,6 +1,7 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import LikeButton from '@/components/blogposts/LikeButton';
 
 interface PostProps {
   params: {
@@ -59,10 +60,9 @@ export default async function Post({ params }: PostProps) {
         md:p-4 md:mt-20 md:w-[85%]
         mt-16 w-[90%]">
 
-      <p className='text-sm text-gray-100/50 border-l-2 border-white/70 px-2 mb-4 h-5'>{fechaFormateada}</p>
+      <p className='text-sm text-gray-100/50 border-l-2 border-white/70 px-2 mb-4 h-5 tabular-nums'>{fechaFormateada}</p>
 
       <h1 className="text-4xl mt-6 font-bold">{post.titulo}</h1>
-
       <section className='flex flex-row gap-6'>
         <div className='flex flex-row gap-1 items-center mt-2'>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-antenna-bars-5">
@@ -72,7 +72,7 @@ export default async function Post({ params }: PostProps) {
             <path d="M14 18l0 -9" />
             <path d="M18 18l0 -12" />
           </svg>
-          <p className='text-xs mt-[1px] text-gray-100/85'>{updatedPost.visitas} visitas</p>
+          <p className='text-xs mt-[1px] text-gray-100/85 tabular-nums'>{updatedPost.visitas} visitas</p>
         </div>
         <div className='flex flex-row gap-1.5 items-center mt-2'>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-clock">
@@ -82,10 +82,7 @@ export default async function Post({ params }: PostProps) {
           </svg>
           <p className='text-xs mt-[1px] text-gray-100/85'>Tiempo de lectura: {post.minutosRead} min</p>
         </div>
-        <button className='flex flex-row gap-1 items-center mt-2'>
-          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-heart"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
-          <p className='mt-[4px] text-xs'>{post.likes}</p>
-        </button>
+        <LikeButton postId={postId} initialLikes={post.likes} /> {/* Agrega el nuevo componente aquí */}
       </section>
 
       <div className='flex flex-wrap gap-2 mt-5'>
