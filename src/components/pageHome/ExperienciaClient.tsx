@@ -47,20 +47,16 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-1 mt-4 mb-10 max-h-28 overflow-y-auto">
                 {
                     experiences?.map((exp) => (
-                        <motion.article
+                        <article
                             key={exp.id}
                             className="cursor-pointer hover:bg-zinc-800/50 backdrop-blur-sm rounded-md transition-colors duration-300 p-1"
                             onClick={() => handleExperienceClick(exp)}
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            layout
                         >
                             <header className="flex flex-row items-center gap-2" onClick={() => handleExperienceClick(exp)}>
                                 <motion.img
                                     src={exp.imagen}
                                     alt={exp.nombre}
-                                    className="size-10 object-cover shadow-lg rounded-md opacity-85"
+                                    className="size-10 object-cover shadow-lg rounded-md"
                                     layoutId={`image-${exp.id}`}
                                 />
                                 <div>
@@ -72,7 +68,7 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
                                     </motion.p>
                                 </div>
                             </header>
-                        </motion.article>
+                        </article>
                     ))
                 }
             </div>
@@ -104,7 +100,7 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
                                 <motion.img
                                     src={selectedExperience.imagen}
                                     alt=""
-                                    className='size-8 object-cover rounded-md shadow-lg opacity-85 md:size-12'
+                                    className='size-8 object-cover rounded-md shadow-lg md:size-12'
                                     layoutId={`image-${selectedExperience.id}`}
                                 />
                                 <div>
