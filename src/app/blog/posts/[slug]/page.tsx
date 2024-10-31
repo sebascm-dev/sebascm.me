@@ -61,7 +61,7 @@ export default async function Post({ params }: PostProps) {
 
       <p className='text-sm text-gray-100/50 border-l-2 border-white/70 px-2 mb-4 h-5 tabular-nums'>{fechaFormateada}</p>
 
-      <h1 className="text-4xl mt-6 font-bold">{post.titulo}</h1>
+      <h1 className="text-4xl mt-6 font-bold text-white">{post.titulo}</h1>
       <section className='flex flex-row gap-2 md:gap-6'>
         <div className='flex flex-row gap-1 items-center mt-2'>
           <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-antenna-bars-5">
@@ -148,7 +148,7 @@ export default async function Post({ params }: PostProps) {
           />
         </div>
         <div>
-          <p className='text-lg font-semibold'>Sebastián Contreras Marín</p>
+          <p className='text-lg font-semibold text-white'>Sebastián Contreras Marín</p>
           <p className='text-xs text-gray-100/50'>Estudiante de Ingeniería Informática</p>
         </div>
       </footer>

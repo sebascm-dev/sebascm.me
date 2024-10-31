@@ -17,7 +17,7 @@ export default async function Blog() {
         md:p-4 md:mt-20 md:w-[85%]
         mt-16 w-[90%]
       ">
-        <h1 className="text-3xl md:text-5xl text-pretty font-semibold">Escribiendo sobre programación, tips, hobbies y cosas varias.</h1>
+        <h1 className="text-3xl md:text-5xl text-pretty font-semibold text-white">Escribiendo sobre programación, tips, hobbies y cosas varias.</h1>
         <p className="text-sm md:text-base mt-3 text-pretty md:mt-6 text-gray-100/75">Si quieres saber más sobre mí y conocerme un poco mejor, este es el sitio indicado. Todos estos posts también están en mi LinkedIn por si prefieres echarle un ojo.</p>
 
         <section className='mt-12 md:pl-8 md:border-l md:border-white/25'>
@@ -64,11 +64,11 @@ export default async function Blog() {
                             <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                             <path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" />
                           </svg>
-                          <p className='mt-[1px] text-xs tabular-nums'>{post.likes}</p>
+                          <p className='mt-[1px] text-xs tabular-nums text-gray-100/85'>{post.likes}</p>
                         </div>
                       </div>
                     </header>
-                    <h1 className='font-semibold mb-1'>{post.titulo}</h1>
+                    <h1 className='font-semibold mb-1 text-white'>{post.titulo}</h1>
                     <div className='flex flex-wrap gap-1 mb-2'>
                       {tagsArray.map((tag: string, index: number) => (
                         <span key={index} className='border border-[#2E2D2D] px-2 py-1 text-xs font-semibold text-[#EDEDED]/80 rounded-md'>#{tag}</span>
