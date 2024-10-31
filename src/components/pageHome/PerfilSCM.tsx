@@ -44,7 +44,7 @@ export default async function PerfilSCM() {
                     </div>
 
                     <div className='flex flex-row items-center gap-2'>
-                        <h1 className="font-bold text-2xl mt-2">{dato.nombre} {dato.apellido1}</h1>
+                        <h1 className="font-bold text-2xl mt-2 text-white">{dato.nombre} {dato.apellido1}</h1>
                         <p className='text-[12px] mt-4 text-gray-100/50'>{calcularEdad(dato.f_nacimiento)} años</p>
                     </div>
                     <p className="mt-1 text-[#D1D0D1] max-w-sm">{dato.descripcion1}</p>
