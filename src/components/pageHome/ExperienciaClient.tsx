@@ -73,8 +73,14 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
                 }
             </div>
             <footer className='flex flex-row justify-around absolute bottom-2 left-0 right-0 text-white'>
-                <p>read.cv(!!!)</p>
-                <p>descargar cv(!!!)</p>
+                <a href='https://read.cv/sebascm' className='border border-[#2E2D2D] p-1 text-sm w-[47%] flex flex-row gap-2 items-center justify-center rounded-sm hover:border-[#EDEDED]/30 transition-all duration-300 hover:scale-105'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-script"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M17 20h-11a3 3 0 0 1 0 -6h11a3 3 0 0 0 0 6h1a3 3 0 0 0 3 -3v-11a2 2 0 0 0 -2 -2h-10a2 2 0 0 0 -2 2v8" /></svg>
+                    <p className=''>Read.cv</p>
+                </a>
+                <a href='/documentos/cv.pdf' target='_blank' download="Curriculum Sebastián Contreras Marín.pdf" className='border border-[#2E2D2D] p-1 text-sm w-[47%] flex flex-row gap-2 items-center justify-center rounded-sm hover:border-[#EDEDED]/30 transition-all duration-300 hover:scale-105'>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-download"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2 -2v-2" /><path d="M7 11l5 5l5 -5" /><path d="M12 4l0 12" /></svg>
+                    <p className=''>Descargar CV</p>
+                </a>
             </footer>
 
             {/* Modal */}
