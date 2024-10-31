@@ -51,7 +51,7 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
                             <header className="flex flex-row items-center gap-2" onClick={() => handleExperienceClick(exp)}>
                                 <img src={exp.imagen} alt={exp.nombre} className="size-10 object-cover shadow-lg rounded-md opacity-85" />
                                 <div>
-                                    <h1>{exp.nombre}</h1>
+                                    <h1 className='text-white'>{exp.nombre}</h1>
                                     <p className="text-sm text-gray-100/50">{exp.tiempo}</p>
                                 </div>
                             </header>
@@ -59,7 +59,7 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
                     ))
                 }
             </div>
-            <footer className='flex flex-row justify-around absolute bottom-2 left-0 right-0'>
+            <footer className='flex flex-row justify-around absolute bottom-2 left-0 right-0 text-white'>
                 <p>read.cv(!!!)</p>
                 <p>descargar cv(!!!)</p>
             </footer>
@@ -81,7 +81,7 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
                             <div className='flex flex-row items-center gap-2'>
                                 <img src={selectedExperience.imagen} alt="" className='size-8 object-cover rounded-md shadow-lg opacity-85 md:size-12' />
                                 <div>
-                                    <h2 className="text-sm md:text-lg font-semibold">{selectedExperience.nombre}</h2>
+                                    <h2 className="text-sm md:text-lg font-semibold text-white">{selectedExperience.nombre}</h2>
                                     <h3 className='text-xs md:text-sm text-gray-100/70'>{selectedExperience.puesto}</h3>
                                 </div>
                             </div>
