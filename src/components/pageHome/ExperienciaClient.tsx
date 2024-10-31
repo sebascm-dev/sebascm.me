@@ -47,15 +47,32 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
             <div className="grid grid-cols-2 lg:grid-cols-3 gap-1 mt-4 mb-10 max-h-28 overflow-y-auto">
                 {
                     experiences?.map((exp) => (
-                        <article key={exp.id} className="cursor-pointer hover:bg-zinc-800/50 backdrop-blur-sm rounded-md transition-colors duration-300 p-1">
+                        <motion.article
+                            key={exp.id}
+                            className="cursor-pointer hover:bg-zinc-800/50 backdrop-blur-sm rounded-md transition-colors duration-300 p-1"
+                            onClick={() => handleExperienceClick(exp)}
+                            initial={{ opacity: 0, scale: 0.9 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.9 }}
+                            layout
+                        >
                             <header className="flex flex-row items-center gap-2" onClick={() => handleExperienceClick(exp)}>
-                                <img src={exp.imagen} alt={exp.nombre} className="size-10 object-cover shadow-lg rounded-md opacity-85" />
+                                <motion.img
+                                    src={exp.imagen}
+                                    alt={exp.nombre}
+                                    className="size-10 object-cover shadow-lg rounded-md opacity-85"
+                                    layoutId={`image-${exp.id}`}
+                                />
                                 <div>
-                                    <h1 className='text-white'>{exp.nombre}</h1>
-                                    <p className="text-sm text-gray-100/50">{exp.tiempo}</p>
+                                    <motion.h1 className='text-white' layoutId={`nombre-${exp.id}`}>
+                                        {exp.nombre}
+                                    </motion.h1>
+                                    <motion.p className="text-sm text-gray-100/50" layoutId={`tiempo-${exp.id}`}>
+                                        {exp.tiempo}
+                                    </motion.p>
                                 </div>
                             </header>
-                        </article>
+                        </motion.article>
                     ))
                 }
             </div>
@@ -66,7 +83,12 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
 
             {/* Modal */}
             {isModalOpen && selectedExperience && (
-                <div className="fixed inset-0 flex items-center justify-center z-50 p-2 backdrop-blur-sm bg-opacity-50">
+                <motion.div
+                    className="fixed inset-0 flex items-center justify-center z-50 p-2 backdrop-blur-sm bg-opacity-50"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                >
                     <motion.div
                         className="rounded-lg z-40 p-2 pt-6 shadow-lg backdrop-blur-md bg-[#1E1E1E]/80 border border-[#2E2D2D] w-full"
                         initial={{ opacity: 0, scale: 0.8 }}
@@ -79,13 +101,33 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
                         </button>
                         <header className='flex flex-row justify-between items-start relative'>
                             <div className='flex flex-row items-center gap-2'>
-                                <img src={selectedExperience.imagen} alt="" className='size-8 object-cover rounded-md shadow-lg opacity-85 md:size-12' />
+                                <motion.img
+                                    src={selectedExperience.imagen}
+                                    alt=""
+                                    className='size-8 object-cover rounded-md shadow-lg opacity-85 md:size-12'
+                                    layoutId={`image-${selectedExperience.id}`}
+                                />
                                 <div>
-                                    <h2 className="text-sm md:text-lg font-semibold text-white">{selectedExperience.nombre}</h2>
-                                    <h3 className='text-xs md:text-sm text-gray-100/70'>{selectedExperience.puesto}</h3>
+                                    <motion.h2
+                                        className="text-sm md:text-lg font-semibold text-white"
+                                        layoutId={`nombre-${selectedExperience.id}`}
+                                    >
+                                        {selectedExperience.nombre}
+                                    </motion.h2>
+                                    <motion.h3
+                                        className='text-xs md:text-sm text-gray-100/70'
+                                        layoutId={`puesto-${selectedExperience.id}`}
+                                    >
+                                        {selectedExperience.puesto}
+                                    </motion.h3>
                                 </div>
                             </div>
-                            <p className='text-xs absolute top-0 right-0 text-gray-100/70'>{selectedExperience.tiempo}</p>
+                            <motion.p
+                                className='text-xs absolute top-0 right-0 text-gray-100/70'
+                                layoutId={`tiempo-${selectedExperience.id}`}
+                            >
+                                {selectedExperience.tiempo}
+                            </motion.p>
                         </header>
 
                         {/* Contenedor para el contenido desplazable */}
@@ -93,7 +135,7 @@ const ExperienciaClient: React.FC<ExperienciaClientProps> = ({ experiences }) =>
                             <p className='text-[#dfdfdf] text-xs md:text-sm text-pretty'>{selectedExperience.descripcion}</p>
                         </div>
                     </motion.div>
-                </div>
+                </motion.div>
             )}
         </section>
     );
