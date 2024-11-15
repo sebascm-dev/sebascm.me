@@ -31,7 +31,7 @@ export default async function DatosProyectos() {
     }
 
     return (
-        <section className="grid grid-cols-4 gap-4 my-4">
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-4">
             <article className="text-center text-sm font-semibold text-[#daffca] border border-[#203f13] rounded-md p-2 bg-[#203f13]/50 shadow-lg backdrop-blur-[2px] hover:border-[#99ff99]/30 transition-colors duration-300">
                 Clientes Satisfechos: {satisfiedClients?.length || 0}
             </article>
