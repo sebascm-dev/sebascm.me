@@ -14,6 +14,7 @@ export default function Dock() {
         { name: "Inicio", href: "/", icon: "/images/avatares/avatar_scm.webp" },
         { name: "About", href: "/about", icon: "/images/svg/about.svg" },
         { name: "Blog", href: "/blog", icon: "/images/svg/blog.svg" },
+        { name: "Proyectos", href: "/proyectos", icon: "/images/svg/proyectos.svg" },
     ];
 
     return (

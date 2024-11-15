@@ -1,4 +1,5 @@
 import Experiencia from "@/components/pageHome/Experiencia";
+import MostrarProyectos from "@/components/pageHome/MostarProyectos";
 import PerfilSCM from "@/components/pageHome/PerfilSCM";
 import UltimoPost from "@/components/pageHome/UltimoPost";
 
@@ -15,9 +16,15 @@ export default function Home() {
         {/* COMPONENTE SIMPLE DE MI PERFIL */}
         <PerfilSCM />
 
-        <section className="mt-32 flex flex-col md:flex-row justify-between gap-4 mb-32">
+        <section className="mt-32 flex flex-col md:flex-row justify-between gap-4 mb-4">
           <UltimoPost />
           <Experiencia />
+        </section>
+        
+        <section className="grid grid-cols-3 gap-4 mb-32">
+          <MostrarProyectos />
+          <MostrarProyectos />
+          <MostrarProyectos />
         </section>
       </main>
     </>
