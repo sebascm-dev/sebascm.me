@@ -1,4 +1,5 @@
 import DatosProyectos from "@/components/pageProyectos/DatosProyectos";
+import Skills from "@/components/pageProyectos/Skills";
 
 export default function proyectos() {
     return (
@@ -12,6 +13,8 @@ export default function proyectos() {
             <p className="text-sm md:text-base mt-3 text-pretty md:mt-6 text-gray-100/75">¿No sabes por dónde empezar? He trabajado en montones de pequeños y grandes proyectos a lo largo de los años, pero estos son los que más me enorgullecen. Muchos de ellos son privados y no podré mostrarlos a continuación.</p>
 
             <DatosProyectos />
+
+            <Skills />
         </main>
     )
 }

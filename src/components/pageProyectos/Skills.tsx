@@ -1,0 +1,21 @@
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from "next/headers";
+
+export default async function Skills() {
+    const supabase = createServerComponentClient({ cookies });
+
+    // Consulta el total de proyectos
+    const { data: skills } = await supabase
+        .from('skills')
+        .select('*');
+
+    return (
+        <section className="flex flex-wrap gap-2 mb-4">
+            {
+                skills?.map((skill) => (
+                    <img src={skill.imagen} key={skill.id} className='size-6 scale-100 hover:scale-110 transition-transform duration-300' alt={skill.nombre} />
+                ))
+            }
+        </section>
+    )
+}
