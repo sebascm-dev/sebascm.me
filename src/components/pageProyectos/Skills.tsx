@@ -10,10 +10,10 @@ export default async function Skills() {
         .select('*');
 
     return (
-        <section className="flex flex-wrap gap-2 mb-4">
+        <section className="flex flex-wrap justify-around gap-2 mb-4">
             {
                 skills?.map((skill) => (
-                    <img src={skill.imagen} key={skill.id} className='size-6 scale-100 hover:scale-110 transition-transform duration-300' alt={skill.nombre} />
+                    <img src={skill.imagen} key={skill.id} className='size-6 opacity-25 scale-100 hover:scale-110 hover:opacity-75 transition-transform duration-300' alt={skill.nombre} />
                 ))
             }
         </section>
