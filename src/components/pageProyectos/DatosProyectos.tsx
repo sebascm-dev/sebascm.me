@@ -31,17 +31,17 @@ export default async function DatosProyectos() {
     }
 
     return (
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 my-4">
-            <article className="text-center text-sm font-semibold text-[#daffca] border border-[#203f13] rounded-md p-2 bg-[#203f13]/50 shadow-lg backdrop-blur-[2px] hover:border-[#99ff99]/30 transition-colors duration-300">
+        <section className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-1.5 md:gap-4 my-4">
+            <article className="text-center text-[11px] md:text-sm font-semibold text-[#daffca]/75 border border-[#203f13] rounded-md p-2 bg-[#203f13]/50 shadow-lg backdrop-blur-[2px] hover:border-[#99ff99]/30 transition-colors duration-300">
                 Clientes Satisfechos: {satisfiedClients?.length || 0}
             </article>
-            <article className="text-center text-sm font-semibold text-[#cae7ff] border border-[#193e57] rounded-md p-2 bg-[#193e57]/50 shadow-lg backdrop-blur-[2px] hover:border-[#99ccff]/30 transition-colors duration-300">
+            <article className="text-center text-[11px] md:text-sm font-semibold text-[#cae7ff]/75 border border-[#193e57] rounded-md p-2 bg-[#193e57]/50 shadow-lg backdrop-blur-[2px] hover:border-[#99ccff]/30 transition-colors duration-300">
                 Total de Proyectos: {totalProjects?.length || 0}
             </article>
-            <article className="text-center text-sm font-semibold text-[#f5ffca] border border-[#575119] rounded-md p-2 bg-[#575119]/50 shadow-lg backdrop-blur-[2px] hover:border-[#ffff99]/30 transition-colors duration-300">
+            <article className="text-center text-[11px] md:text-sm font-semibold text-[#f5ffca]/75 border border-[#575119] rounded-md p-2 bg-[#575119]/50 shadow-lg backdrop-blur-[2px] hover:border-[#ffff99]/30 transition-colors duration-300">
                 Proyectos Personales: {personalProjects?.length || 0}
             </article>
-            <article className="text-center text-sm font-semibold text-[#ffe2ca] border border-[#574119] rounded-md p-2 bg-[#574119]/50 shadow-lg backdrop-blur-[2px] hover:border-[#ffcc99]/30 transition-colors duration-300">
+            <article className="text-center text-[11px] md:text-sm font-semibold text-[#ffe2ca]/75 border border-[#574119] rounded-md p-2 bg-[#574119]/50 shadow-lg backdrop-blur-[2px] hover:border-[#ffcc99]/30 transition-colors duration-300">
                 Proyectos de Empresas: {companyProjects}
             </article>
         </section>
