@@ -1,7 +1,6 @@
 import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Link } from 'next-view-transitions';
 import { cookies } from "next/headers";
-import GitHubLink from '../linksSociales/GitHubLink';
 
 export default async function UltimoPost() {
     const supabase = createServerComponentClient({ cookies });
