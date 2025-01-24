@@ -11,7 +11,7 @@ export default async function UltimoPost() {
 
     return (
         <>
-            <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10'>
+            <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10 mb-28'>
                 {projects?.map((project) => {
                     // Convertir la fecha a un objeto Date
                     const fecha = new Date(project.fecFin);
