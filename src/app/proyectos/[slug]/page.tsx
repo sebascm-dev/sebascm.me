@@ -40,12 +40,15 @@ export default async function Project({ params }: ProjectProps) {
     return;
   }
 
-  // Formatear fecha
-  const fecha = new Date(project.fechaLanzamiento);
+  // Convertir la fecha a un objeto Date
+  const fecha = new Date(project.fecFin);
+  // Formatear la fecha
   const opciones = { day: '2-digit', month: 'long', year: 'numeric' } as const;
   const fechaFormateada = fecha.toLocaleDateString('es-ES', opciones);
 
+  // Dividir las tags y generar spans
   const tagsArray = project.tags.split(',').map((tag: string) => tag.trim());
+
 
   // Convertir el contenido Markdown en HTML
   const contenidoHtml = marked(project.contenido);
@@ -90,6 +93,8 @@ export default async function Project({ params }: ProjectProps) {
       <p className='mt-10 text-pretty text-gray-100/60'>{project.descripcion}</p>
 
       <hr className="my-16 border-0 h-[1px] bg-gradient-to-r from-transparent via-gray-400/40 to-transparent" />
+
+        <img src={project.imagen} alt={project.titulo} className=' aspect-video object-cover rounded-md shadow-2xl' />
 
       {/* Renderiza el contenido Markdown convertido en HTML y aplica el estilo `prose` */}
       <article className="
