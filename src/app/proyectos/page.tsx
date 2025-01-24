@@ -1,3 +1,4 @@
+import AllProjects from "@/components/pageProyectos/AllProjects";
 import DatosProyectos from "@/components/pageProyectos/DatosProyectos";
 import Skills from "@/components/pageProyectos/Skills";
 import UltimoProyecto from "@/components/pageProyectos/UltimoProyecto";
@@ -18,6 +19,8 @@ export default function proyectos() {
             <Skills />
 
             <UltimoProyecto />
+
+            <AllProjects />
         </main>
     )
 }

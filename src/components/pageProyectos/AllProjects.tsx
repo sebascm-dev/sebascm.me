@@ -8,34 +8,31 @@ export default async function UltimoPost() {
         .from('projects')
         .select()
         .order('created_at', { ascending: false })
-        .limit(1);
 
     return (
         <>
-            {projects?.map((project) => {
-                // Convertir la fecha a un objeto Date
-                const fecha = new Date(project.fecFin);
-                // Formatear la fecha
-                const opciones = { day: '2-digit', month: 'long', year: 'numeric' } as const;
-                const fechaFormateada = fecha.toLocaleDateString('es-ES', opciones);
+            <section className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-10'>
+                {projects?.map((project) => {
+                    // Convertir la fecha a un objeto Date
+                    const fecha = new Date(project.fecFin);
+                    // Formatear la fecha
+                    const opciones = { day: '2-digit', month: 'long', year: 'numeric' } as const;
+                    const fechaFormateada = fecha.toLocaleDateString('es-ES', opciones);
 
-                // Dividir las tags y generar spans
-                const tagsArray = project.tags.split(',').map((tag: string) => tag.trim());
+                    return (
+                        <article
+                            key={project.id}
+                            className='relative w-full border border-[#2E2D2D] rounded-lg p-0.5 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] hover:border-[#EDEDED]/30 transition-all duration-300 mb-6 flex flex-col md:flex-row gap-2'
+                        >
+                            <div>
+                                <img
+                                    src={project.imagen}
+                                    alt={project.titulo}
+                                    className='aspect-video object-cover h-auto rounded-md opacity-100 hover:opacity-10 transition-opacity duration-300 z-30'
+                                />
+                            </div>
 
-                return (
-                    <article
-                        key={project.id}
-                        className='relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] hover:border-[#EDEDED]/30 transition-colors duration-300 mb-6 flex flex-col md:flex-row gap-2'
-                    >
-                        <div className='mt-5 md:mt-0 md:w-[40%]'>
-                            <img
-                                src={project.imagen}
-                                alt={project.titulo}
-                                className='aspect-video object-cover h-auto rounded-sm'
-                            />
-                        </div>
-                        <div className='md:w-[60%]'>
-                            <div className='flex flex-row gap-2 absolute top-[24px] md:top-[30px] right-3'>
+                            <div className='flex flex-row gap-2 absolute top-[24px] md:top-[22px] right-3 -z-10'>
                                 <div className='flex flex-row gap-0.5 items-center -mt-4'>
                                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="orange" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-antenna-bars-5">
                                         <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -65,34 +62,29 @@ export default async function UltimoPost() {
                                     <p className='mt-[1px] text-xs tabular-nums text-gray-100/85'>{project.likes}</p>
                                 </div>
                             </div>
-                            <p className='absolute top-[9px] md:relative text-sm text-gray-100/50 border-l-2 border-white/70 px-2 mb-4 h-5'>
+
+                            <p className='absolute top-[5.5px] left-2 text-sm text-gray-100/50 border-l-2 border-white/70 px-2 mb-4 h-5 -z-10'>
                                 {fechaFormateada}
                             </p>
-                            <h1 className='font-semibold text-white'>{project.titulo}</h1>
-                            <div className='flex flex-wrap gap-1 mt-1'>
-                                {tagsArray.map((tag: string, index: number) => (
-                                    <span
-                                        key={index}
-                                        className='border border-[#2E2D2D] px-2 py-1 text-xs font-semibold text-[#EDEDED]/80 rounded-md'
-                                    >
-                                        #{tag}
-                                    </span>
-                                ))}
-                            </div>
-                            <p className='text-sm text-gray-100/50 text-pretty mb-10 md:mb-0 line-clamp-4 md:line-clamp-6 mt-2'>
+
+                            <h1 className='absolute top-9 left-2 line-clamp-1 text-sm font-semibold text-white -z-10'>{project.titulo}</h1>
+
+                            <p className=' absolute top-12 left-2 text-sm text-gray-100/50 text-pretty mb-10 line-clamp-4 mt-2 -z-10'>
                                 {project.descripcion}
                             </p>
-                            <div className='flex flex-row gap-2 absolute bottom-3'>
+                            
+                            <div className='flex flex-row gap-2 absolute bottom-1 left-2 -z-10'>
                                 {['skill1', 'skill2', 'skill3', 'skill4', 'skill5'].map((skill, index) => (
                                     <img
                                         key={index}
                                         src={project[skill]}
                                         alt={skill}
-                                        className='size-5 opacity-25 scale-100 hover:scale-110 hover:opacity-75 transition-transform duration-300'
+                                        className='size-5 opacity-60 scale-100 hover:scale-110 hover:opacity-75 transition-transform duration-300'
                                     />
                                 ))}
                             </div>
-                            <div className='absolute bottom-4 right-3 flex flex-row gap-2'>
+
+                            <div className='absolute bottom-[9px] right-2 flex flex-row gap-2'>
                                 <div className="bg-transparent rounded-md size-5">
                                     <a
                                         href={project.github}
@@ -115,23 +107,25 @@ export default async function UltimoPost() {
                                     </a>
                                 </div>
                             </div>
+
                             <Link
                                 href={`/proyectos/${project.enlace}`}
-                                className='absolute bottom-2 right-[38px] md:right-14 text-[#EDEDED]/50 hover:text-[#EDEDED]/80 transition-colors duration-300'
+                                className='absolute text-sm bottom-1 right-10 text-[#EDEDED]/80 scale-100 hover:text-[#EDEDED]/100 hover:scale-105 transition-all duration-300'
                             >
                                 WebSite
                             </Link>
+
                             <Link
                                 href={`/proyectos/${project.id}-${encodeURIComponent(project.titulo)}`}
-                                className='absolute bottom-2 right-[105px] md:right-36 text-[#EDEDED]/50 hover:text-[#EDEDED]/80 transition-colors duration-300'
+                                className='absolute text-sm bottom-1 right-[105px] text-[#EDEDED]/80 scale-100 hover:text-[#EDEDED]/100 hover:scale-105 transition-all duration-300'
                             >
                                 Leer más
                             </Link>
-                        </div>
 
-                    </article>
-                );
-            })}
+                        </article>
+                    );
+                })}
+            </section>
         </>
     );
 }
