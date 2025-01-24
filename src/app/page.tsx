@@ -1,7 +1,7 @@
 import Experiencia from "@/components/pageHome/Experiencia";
-import MostrarProyectos from "@/components/pageHome/MostarProyectos";
 import PerfilSCM from "@/components/pageHome/PerfilSCM";
 import UltimoPost from "@/components/pageHome/UltimoPost";
+import MosPro from "../components/pageHome/MosPro";
 
 export default function Home() {
   return (
@@ -22,9 +22,7 @@ export default function Home() {
         </section>
         
         <section className="grid grid-cols-3 gap-4 mb-32">
-          <MostrarProyectos />
-          <MostrarProyectos />
-          <MostrarProyectos />
+          <MosPro />
         </section>
       </main>
     </>

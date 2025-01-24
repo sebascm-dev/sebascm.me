@@ -1,21 +1,40 @@
-import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+'use client';
+
+import { motion } from "framer-motion";
 import { Link } from 'next-view-transitions';
-import { cookies } from "next/headers";
 
-export default async function MostrarProyectos() {
-    const supabase = createServerComponentClient({ cookies });
-    
-    // Consulta los últimos 4 proyectos ordenados por la fecha de creación
-    const { data: projects, error } = await supabase
-        .from('projects')
-        .select('imagen') // Asegúrate de que el campo `imagen` existe en tu tabla `projects`
-        .order('created_at', { ascending: false })
-        .limit(4);
+interface Project {
+    imagen: string;
+}
 
-    // Manejo de errores
-    if (error) {
-        console.error("Error al obtener los proyectos:", error);
-        return <p>Error al cargar los proyectos.</p>;
+export default function MostrarProyectos({ projects }: { projects: Project[] }) {
+    // Variantes de animación para Framer Motion
+    const variants = [
+        {
+            initial: { opacity: 0, y: 20, rotate: -5, x: -20 },
+            animate: { opacity: 1, y: 0, rotate: -5, x: -20 },
+            transition: { duration: 1 },
+        },
+        {
+            initial: { opacity: 0, y: 20, rotate: 32 },
+            animate: { opacity: 1, y: 0, rotate: 32 },
+            transition: { duration: 1, delay: 0.2 },
+        },
+        {
+            initial: { opacity: 0, y: 20, rotate: -32, x: 40 },
+            animate: { opacity: 1, y: 0, rotate: -32, x: 40 },
+            transition: { duration: 1, delay: 0.4 },
+        },
+        {
+            initial: { opacity: 0, y: 20, rotate: 7, x: 10 },
+            animate: { opacity: 1, y: 0, rotate: 7, x: 10 },
+            transition: { duration: 1, delay: 0.6 },
+        },
+    ];
+
+    // Manejo de la ausencia de proyectos
+    if (!projects || projects.length === 0) {
+        return <p className="text-center text-white">No hay proyectos disponibles.</p>;
     }
 
     return (
@@ -27,19 +46,14 @@ export default async function MostrarProyectos() {
             <div className="relative w-full h-52 overflow-hidden group-hover:blur-sm transition-all duration-300">
                 <div className="relative w-full h-full flex flex-row gap-2 justify-center items-center">
                     {projects.map((project, index) => (
-                        <img
+                        <motion.img
                             key={index}
                             src={project.imagen} // Imagen dinámica desde la base de datos
                             alt={`Proyecto ${index + 1}`}
-                            className={`absolute aspect-video h-36 object-cover rounded-lg shadow-lg transform transition-all duration-300 ${
-                                index === 0
-                                    ? "rotate-[-5deg] -translate-x-5"
-                                    : index === 1
-                                    ? "rotate-[32deg]"
-                                    : index === 2
-                                    ? "rotate-[-32deg] translate-x-10"
-                                    : "rotate-[7deg] translate-x-1"
-                            }`}
+                            initial={variants[index]?.initial}
+                            animate={variants[index]?.animate}
+                            transition={variants[index]?.transition}
+                            className="absolute aspect-video h-36 object-cover rounded-lg shadow-lg"
                         />
                     ))}
                 </div>
@@ -53,4 +67,3 @@ export default async function MostrarProyectos() {
         </section>
     );
 }
-
