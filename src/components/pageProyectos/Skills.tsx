@@ -13,7 +13,7 @@ export default async function Skills() {
         <section className="flex flex-wrap lg:justify-around gap-2 mb-4">
             {
                 skills?.map((skill) => (
-                    <img src={skill.imagen} key={skill.id} className='size-6 opacity-25 scale-100 hover:scale-110 hover:opacity-75 transition-transform duration-300' alt={skill.nombre} />
+                    <img src={skill.imagen} key={skill.id} className='size-6 hidden md:block opacity-25 scale-100 hover:scale-110 hover:opacity-75 transition-transform duration-300' alt={skill.nombre} />
                 ))
             }
         </section>
