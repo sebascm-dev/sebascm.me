@@ -21,7 +21,7 @@ export default function Home() {
           <Experiencia />
         </section>
         
-        <section className="grid grid-cols-3 gap-4 mb-32">
+        <section className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 mb-32">
           <MosPro />
         </section>
       </main>
