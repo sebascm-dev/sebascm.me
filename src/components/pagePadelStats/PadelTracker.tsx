@@ -89,7 +89,6 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
   const totalGanados = days.filter(day => day.played && day.resultado === 1).length;
   const totalPerdidos = days.filter(day => day.played && day.resultado === 0).length;
   const totalEntrenamiento = days.filter(day => day.played && day.resultado === 2).length;
-  const totalTorneo = days.filter(day => day.played && day.resultado === 3).length;
 
   return (
     <div className="relative min-h-[400px] md:min-h-72 lg:min-h-64 border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300">
