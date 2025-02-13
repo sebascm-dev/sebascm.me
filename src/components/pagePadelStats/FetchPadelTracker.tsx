@@ -1,0 +1,24 @@
+import { createServerComponentClient } from "@supabase/auth-helpers-nextjs";
+import { cookies } from "next/headers";
+import PadelTracker from "./PadelTracker";
+
+export default async function fetchPadelTracker() {
+  // 1. Create the Supabase client on the server
+  const supabase = createServerComponentClient({ cookies });
+
+  // 2. Fetch your data
+  const { data: matchpadel, error } = await supabase
+    .from("matchpadel")
+    .select("*")
+    .order("created_at", { ascending: true })
+    .limit(365);
+    
+  // 3. If error or no data, pass an empty array to avoid `.map` on undefined
+  if (error || !matchpadel) {
+    console.error("Error al obtener las fechas de los partidos:", error);
+    return <PadelTracker matchpadel={[]} />;
+  }
+
+  // 4. Otherwise pass the array to the client component
+  return <PadelTracker matchpadel={matchpadel} />;
+}

@@ -15,6 +15,7 @@ export default function Dock() {
         { name: "About", href: "/about", icon: "/images/svg/about.svg" },
         { name: "Blog", href: "/blog", icon: "/images/svg/blog.svg" },
         { name: "Proyectos", href: "/proyectos", icon: "/images/svg/proyectos.svg" },
+        { name: "PadelStats", href: "/padelstats", icon: "/images/svg/padelstats.svg" },
     ];
 
     return (
