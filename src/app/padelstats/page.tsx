@@ -1,4 +1,5 @@
 import FetchPadelResultsMatch from "@/components/pagePadelStats/FetchPadelResultsMatch";
+import FetchPadelSetsChart from "@/components/pagePadelStats/FetchPadelSetsChart";
 import FetchPadelStatsMatch from "@/components/pagePadelStats/FetchPadelStatsMatch";
 import FetchPadelTracker from "@/components/pagePadelStats/FetchPadelTracker";
 
@@ -11,9 +12,14 @@ export default function padelstats() {
         mt-16 mb-32 w-[90%]
         ">
             <FetchPadelTracker />
-            <section className="flex flex-col md:flex-row gap-4">
-                <FetchPadelStatsMatch />
-                <FetchPadelResultsMatch />
+            <section className="flex flex-col lg:flex-row gap-4">
+                <div className="wfull lg:w-1/2">
+                    <FetchPadelStatsMatch />
+                </div>
+                <div className="wfull lg:w-1/2">
+                    <FetchPadelSetsChart />
+                    <FetchPadelResultsMatch />
+                </div>
             </section>
         </main>
     )

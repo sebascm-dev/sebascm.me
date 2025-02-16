@@ -62,7 +62,7 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
   }, [matchpadel])
 
   return (
-    <div suppressHydrationWarning className="relative mt-8 lg:max-w-[50%] border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300">
+    <div suppressHydrationWarning className="relative mt-8 border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300">
       <header className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1">
         <Sparkles className="w-5 h-5 text-white" />
         <p className="mt-0.5 font-bold text-sm text-white">Estadísticas Generales</p>
