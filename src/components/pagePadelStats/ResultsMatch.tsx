@@ -15,7 +15,7 @@ interface MatchPadel {
 
 export default function ResultsMatch({ matchpadel = [] }: { matchpadel: MatchPadel[] }) {
     return (
-        <div className="space-y-8 mt-8 w-full lg:w-[50%]">
+        <div className="space-y-8 mt-4 md:mt-8 w-full lg:w-[50%]">
             {matchpadel.map((match) => {
                 const { id, fechaPartido, horaPartido, set1, set2, set3, resultado } = match
 
@@ -100,12 +100,12 @@ export default function ResultsMatch({ matchpadel = [] }: { matchpadel: MatchPad
                         {/* Encabezado: fecha, hora y estado */}
                         <div className="flex justify-between items-center">
                             {/* Fecha y hora */}
-                            <div className="flex items-center gap-4">
-                                <div className={`flex items-center gap-2 ${borderColor} rounded-full px-3 py-1`}>
+                            <div className="flex items-center md:gap-4">
+                                <div className={`flex items-center gap-1 md:gap-2 ${borderColor} rounded-full md:px-3 py-1`}>
                                     <Calendar className="w-4 h-4 text-gray-100/50" />
                                     <span className="text-sm text-white">{dateFormatted}</span>
                                 </div>
-                                <div className={`flex items-center gap-2 ${borderColor} rounded-full px-3 py-1`}>
+                                <div className={`flex items-center gap-1 md:gap-2 ${borderColor} rounded-full px-2 md:px-3 py-1`}>
                                     <Clock className="w-4 h-4 text-gray-100/50" />
                                     <span className="text-sm text-white">{timeFormatted}</span>
                                 </div>
