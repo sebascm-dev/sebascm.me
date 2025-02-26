@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Volleyball, X } from "lucide-react";
+import { Volleyball } from "lucide-react";
 import { motion } from "framer-motion";
 import Modal from 'react-modal';
 import ResultsMatch from './ResultsMatch';
