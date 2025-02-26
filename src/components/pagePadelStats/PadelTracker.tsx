@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Volleyball } from "lucide-react";
+import { Volleyball, X } from "lucide-react";
 import { motion } from "framer-motion";
+import Modal from 'react-modal';
+import ResultsMatch from './ResultsMatch';
 
 type DayStatus = {
   date: string;
@@ -11,8 +13,10 @@ type DayStatus = {
 };
 
 interface MatchPadel {
+  id: number; // Unique identifier for the match
   fechaPartido: string; // Formato recibido: yyyy-mm-dd
   resultado: number; // 1 = Partido Ganado, 0 = Partido Perdido, 2 = Entrenamiento, 3 = Torneo
+  horaPartido?: string | null; // Formato recibido: hh:mm:ss
 }
 
 const MONTHS = [
@@ -56,6 +60,8 @@ const squareVariants = {
 
 export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPadel[] }) {
   const [days, setDays] = useState<DayStatus[]>([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedDay, setSelectedDay] = useState<DayStatus | null>(null);
 
   useEffect(() => {
     if (!matchpadel || !Array.isArray(matchpadel) || matchpadel.length === 0) {
@@ -94,6 +100,16 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
   const totalGanados = days.reduce((acc, day) => acc + day.resultados.filter(r => r === 1).length, 0);
   const totalPerdidos = days.reduce((acc, day) => acc + day.resultados.filter(r => r === 0).length, 0);
   const totalEntrenamiento = days.reduce((acc, day) => acc + day.resultados.filter(r => r === 2).length, 0);
+
+  const openModal = (day: DayStatus) => {
+    setSelectedDay(day);
+    setModalIsOpen(true);
+  };
+
+  const closeModal = () => {
+    setModalIsOpen(false);
+    setSelectedDay(null);
+  };
 
   return (
     <div className="relative min-h-[400px] md:min-h-72 lg:min-h-64 border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300">
@@ -145,6 +161,7 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
                     : "#2E2D2D",
               }}
               title={`${day.date}: ${day.played ? titleParts.join(", ") : "Sin Jugar"}`}
+              onClick={() => openModal(day)}
             ></motion.div>
           );
         })}
@@ -164,6 +181,27 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
           <span className="ml-1 mt-0.5">Entrenamiento: {totalEntrenamiento}</span>
         </div>
       </div>
-    </div >
+
+      {selectedDay && (
+        <Modal
+          isOpen={modalIsOpen}
+          onRequestClose={closeModal}
+          contentLabel="Resultados del Día"
+          className="modal"
+          overlayClassName="modal-overlay"
+        >
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            transition={{ duration: 0.3 }}
+          >
+            <div className="-mt-8">
+              <ResultsMatch matchpadel={matchpadel.filter(match => convertBackendDate(match.fechaPartido) === selectedDay.date).sort((a, b) => new Date(`${a.fechaPartido}T${a.horaPartido}`).getTime() - new Date(`${b.fechaPartido}T${b.horaPartido}`).getTime())} />
+            </div>
+          </motion.div>
+        </Modal>
+      )}
+    </div>
   );
 }

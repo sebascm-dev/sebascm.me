@@ -25,3 +25,57 @@ body {
     text-wrap: balance;
   }
 }
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  margin-right: -50%;
+  transform: translate(-50%, -50%);
+  border: 1px solid #2c2b2b;
+  border-radius: 8px;
+  padding: 16px;
+  background: rgba(28, 28, 28, 0.5);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(2px);
+  max-height: 600px; /* Establece la altura máxima */
+  overflow-y: auto; /* Habilita el desplazamiento vertical */
+  width: auto; /* Ancho automático por defecto */
+  outline: none; /* Elimina el borde de enfoque predeterminado */
+}
+
+@media (max-width: 768px) {
+  .modal {
+    width: 98%; /* Ancho del 95% en dispositivos móviles */
+  }
+}
+
+/* Estilos minimalistas para la barra de desplazamiento */
+.modal::-webkit-scrollbar {
+  width: 8px; /* Ancho de la barra de desplazamiento */
+}
+
+.modal::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1); /* Color del fondo de la barra de desplazamiento */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+.modal::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3); /* Color del pulgar de la barra de desplazamiento */
+  border-radius: 8px; /* Bordes redondeados */
+}
+
+.modal::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5); /* Color del pulgar de la barra de desplazamiento al pasar el ratón */
+}
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+}
