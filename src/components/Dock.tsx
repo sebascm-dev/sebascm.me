@@ -26,6 +26,7 @@ export default function Dock() {
     { name: "Blog", href: "/blog", icon: "/images/svg/blog.svg" },
     { name: "Proyectos", href: "/proyectos", icon: "/images/svg/proyectos.svg" },
     { name: "PadelStats", href: "/padelstats", icon: "/images/svg/padelstats.svg" },
+    { name: "Carrera", href: "/carrera", icon: "/images/svg/carrera.svg" },
   ];
 
   return (
