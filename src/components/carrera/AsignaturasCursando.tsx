@@ -90,9 +90,10 @@ export default function AsignaturasCursando({ asignaturas }: AsignaturasCursando
 
     if (asignaturasCursando.length === 0) {
         return (
-            <div className="border border-[#2E2D2D] rounded-lg p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] hover:border-[#EDEDED]/30 transition-colors duration-300">
-                <h3 className="text-sm font-bold text-white mb-3 uppercase tracking-wide">
-                    📚 Cursando este año
+            <div className="border border-[#2E2D2D] rounded-lg p-3 sm:p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] hover:border-[#EDEDED]/30 transition-colors duration-300">
+                <h3 className="text-xs sm:text-sm font-bold text-white mb-3 uppercase tracking-wide flex items-center gap-2">
+                    <span className="text-lg sm:text-xl">📚</span>
+                    Cursando este año
                 </h3>
                 <p className="text-xs text-gray-100/50 text-center py-4">
                     No hay asignaturas marcadas como cursando actualmente
@@ -102,18 +103,28 @@ export default function AsignaturasCursando({ asignaturas }: AsignaturasCursando
     }
 
     return (
-        <div className="border border-[#2E2D2D] rounded-lg p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] hover:border-[#EDEDED]/30 transition-colors duration-300">
-            <div className="flex items-center justify-between mb-3">
-                <h3 className="text-sm font-bold text-white uppercase tracking-wide">
-                    📚 Cursando este año
-                </h3>
-                <div className="flex items-center gap-3 text-[10px] text-gray-100/75">
-                    <span>{asignaturasCursando.length} asignaturas</span>
-                    <span className="text-orange-400 font-bold">{totalCreditos} ECTS</span>
+        <div className="border border-[#2E2D2D] rounded-lg p-2 sm:p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] hover:border-[#EDEDED]/30 transition-colors duration-300">
+            {/* Header compacto */}
+            <div className="bg-gradient-to-r from-blue-500/10 via-purple-500/5 to-transparent border-l-2 border-blue-500 rounded-r px-2 py-1.5 mb-2">
+                <div className="flex items-center justify-between gap-2">
+                    <h3 className="text-[10px] sm:text-sm font-bold text-white uppercase tracking-wide flex items-center gap-1.5">
+                        <span className="text-base sm:text-xl">📚</span>
+                        <span className="hidden sm:inline">Cursando este año</span>
+                        <span className="sm:hidden">Cursando</span>
+                    </h3>
+                    <div className="flex items-center gap-1">
+                        <span className="px-1.5 py-0.5 text-[8px] sm:text-[10px] rounded bg-blue-500/20 text-blue-400 border border-blue-500/30 font-semibold">
+                            {asignaturasCursando.length}
+                        </span>
+                        <span className="px-1.5 py-0.5 text-[8px] sm:text-[10px] rounded bg-orange-500/20 text-orange-400 border border-orange-500/30 font-bold">
+                            {totalCreditos}
+                        </span>
+                    </div>
                 </div>
             </div>
 
-            <div className="space-y-2">
+            {/* Lista compacta */}
+            <div className="space-y-1.5">
                 {asignaturasCursando.map((asignatura, index) => (
                     <motion.div
                         key={asignatura.id}
@@ -121,44 +132,36 @@ export default function AsignaturasCursando({ asignaturas }: AsignaturasCursando
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ delay: index * 0.05 }}
                         className={`
-                            flex items-center gap-2 px-3 py-2 border-l-2 border-b border-[#2E2D2D]
-                            bg-[#1C1C1C]/30 rounded-r
-                            hover:bg-[#1C1C1C]/60 transition-colors duration-200
+                            group relative overflow-hidden
+                            flex items-center gap-2 
+                            px-2 py-1.5 sm:py-2 border-l-2 border border-[#2E2D2D]
+                            bg-[#1C1C1C]/30 rounded
+                            hover:bg-[#1C1C1C]/60 hover:border-[#EDEDED]/20
+                            transition-all duration-200
                             ${getBorderColor(asignatura.especialidad)}
                         `}
                     >
-                        {/* Nombre y Rama */}
+                        {/* Contenido */}
                         <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-2">
-                                <h4 className="text-xs font-medium text-white truncate">
-                                    {asignatura.nombre}
-                                </h4>
-                                <span className={`text-[9px] font-medium ${getRamaColor(asignatura.especialidad)} uppercase tracking-wider shrink-0`}>
+                            <h4 className="text-[10px] sm:text-sm font-semibold text-white truncate leading-tight">
+                                {asignatura.nombre}
+                            </h4>
+                            <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className={`text-[7px] sm:text-[9px] font-bold ${getRamaColor(asignatura.especialidad)} uppercase tracking-wider`}>
                                     {getRamaNombre(asignatura.especialidad)}
                                 </span>
-                            </div>
-                            <div className="flex items-center gap-2 mt-0.5">
-                                <span className="text-[9px] text-gray-100/50">
-                                    {asignatura.curso}º Curso · {asignatura.cuatrimestre}º Cuatr.
+                                <span className="text-[7px] sm:text-[9px] text-gray-100/50">
+                                    {asignatura.curso}º·C{asignatura.cuatrimestre}
                                 </span>
                             </div>
                         </div>
 
-                        {/* ECTS */}
+                        {/* ECTS compacto */}
                         <div className="shrink-0">
-                            <span className="text-[10px] font-bold text-orange-400">
-                                {asignatura.ects} ECTS
+                            <span className="text-[10px] sm:text-xs font-bold text-orange-400 px-1.5 py-0.5 rounded bg-orange-500/20 border border-orange-500/30">
+                                {asignatura.ects}
                             </span>
                         </div>
-
-                        {/* Turno */}
-                        {asignatura.turno && (
-                            <div className="hidden sm:block shrink-0">
-                                <span className="text-[9px] px-2 py-1 rounded bg-blue-500/10 text-blue-400 border border-blue-500/30">
-                                    {asignatura.turno}
-                                </span>
-                            </div>
-                        )}
                     </motion.div>
                 ))}
             </div>

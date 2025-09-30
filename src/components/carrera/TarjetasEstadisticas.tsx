@@ -46,7 +46,7 @@ export default function TarjetasEstadisticas({ estadisticas }: TarjetasEstadisti
     ];
 
     return (
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-1.5 sm:gap-4">
             {tarjetas.map((tarjeta, index) => (
                 <motion.div
                     key={index}
@@ -56,18 +56,18 @@ export default function TarjetasEstadisticas({ estadisticas }: TarjetasEstadisti
                     whileHover={{ scale: 1.05, y: -5 }}
                     className={`
                         relative overflow-hidden group
-                        border border-[#2E2D2D] rounded-lg p-5
+                        border border-[#2E2D2D] rounded-lg p-2 sm:p-5
                         bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px]
                         hover:border-[#EDEDED]/30
                         transition-all duration-300 cursor-pointer
                     `}
                 >
                     <div>
-                        <div className="flex justify-between items-start mb-2">
-                            <p className="text-xs text-gray-100/60 font-medium uppercase tracking-wider">{tarjeta.titulo}</p>
-                            <span className="text-2xl group-hover:scale-110 transition-transform duration-300">{tarjeta.icono}</span>
+                        <div className="flex justify-between items-start mb-1">
+                            <p className="text-[8px] sm:text-xs text-gray-100/60 font-medium uppercase tracking-wider leading-tight">{tarjeta.titulo}</p>
+                            <span className="text-base sm:text-2xl group-hover:scale-110 transition-transform duration-300">{tarjeta.icono}</span>
                         </div>
-                        <p className="text-3xl font-bold text-white group-hover:scale-105 transition-transform duration-300">
+                        <p className="text-xl sm:text-3xl font-bold text-white group-hover:scale-105 transition-transform duration-300">
                             {tarjeta.valor}
                         </p>
                     </div>
