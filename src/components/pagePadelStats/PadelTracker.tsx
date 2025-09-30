@@ -149,7 +149,7 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
     }
     
     const firstDay = week[0].date;
-    const [day, month, year] = firstDay.split('-');
+    const [day, month] = firstDay.split('-');
     const currentMonth = parseInt(month) - 1;
     
     if (currentMonth !== lastMonthDesktop && parseInt(day) <= 7) {
@@ -268,11 +268,11 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
               const firstDay = week[0]?.date;
               let monthLabel = '';
               if (firstDay) {
-                const [day, month, year] = firstDay.split('-');
+                const [, month] = firstDay.split('-');
                 const currentMonth = parseInt(month) - 1;
                 const prevWeek = weeksMobile[weekIndex - 1];
                 if (prevWeek && prevWeek[0]) {
-                  const [prevDay, prevMonth] = prevWeek[0].date.split('-');
+                  const [, prevMonth] = prevWeek[0].date.split('-');
                   const prevMonthNum = parseInt(prevMonth) - 1;
                   if (currentMonth !== prevMonthNum) {
                     monthLabel = MONTHS[currentMonth];
