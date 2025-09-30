@@ -1,12 +1,23 @@
 "use client"
 
-import { Sparkles } from "lucide-react"
+import { Sparkles, Medal } from "lucide-react"
 import { useMemo, useEffect } from "react"
 import { motion, useMotionValue, useTransform, animate } from "framer-motion"
 
 interface MatchPadel {
   fechaPartido: string
   resultado: number // 1 = Ganado, 0 = Perdido, 2 = Entrenamiento, 3 = Torneo
+}
+
+// Función para obtener el color según el porcentaje
+function getColorByPercentage(percentage: number): string {
+  if (percentage === 100) return "stroke-yellow-400"
+  if (percentage >= 85) return "stroke-green-400"
+  if (percentage >= 65) return "stroke-blue-400"
+  if (percentage >= 50) return "stroke-cyan-400"
+  if (percentage >= 40) return "stroke-yellow-300"
+  if (percentage >= 20) return "stroke-orange-400"
+  return "stroke-red-400"
 }
 
 // Componente para animar un número de 0 hasta "value"
@@ -61,6 +72,16 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
       ? Math.round((last15Wins / last15Games) * 100)
       : 0
 
+    // 7. Calcular racha de victorias consecutivas
+    let currentStreak = 0
+    for (let i = onlyMatches.length - 1; i >= 0; i--) {
+      if (onlyMatches[i].resultado === 1) {
+        currentStreak++
+      } else {
+        break
+      }
+    }
+
     return {
       totalGames,
       totalWins,
@@ -71,6 +92,7 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
       last15Games,
       last15Wins,
       last15WinRate,
+      currentStreak,
     }
   }, [matchpadel])
 
@@ -130,128 +152,277 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
           </div>
         </div>
 
-        {/* Separador */}
-        <hr className="border-t border-[#2E2D2D]" />
+        {/* Indicador de racha */}
+        <div className="relative flex flex-col items-center gap-3 py-2">
+          {/* Línea conectora */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200px] h-[1px]">
+            <div className="h-full bg-gradient-to-r from-transparent via-[#2E2D2D] to-transparent"></div>
+          </div>
+
+          {/* Burbujas */}
+          <div className="relative flex items-center justify-center gap-6">
+            {[1, 2, 3, 4, 5].map((level) => (
+              <motion.div
+                key={level}
+                initial={{ scale: 0 }}
+                animate={{ 
+                  scale: stats.currentStreak >= 5 && stats.currentStreak >= level ? [1, 1.2, 1] : 1,
+                }}
+                transition={{ 
+                  delay: level * 0.1, 
+                  type: "spring", 
+                  stiffness: 200,
+                  repeat: stats.currentStreak >= 5 ? Infinity : 0,
+                  repeatDelay: 0.5,
+                  duration: 0.6
+                }}
+                className={`relative w-3 h-3 rounded-full transition-all duration-300 ${
+                  stats.currentStreak >= level
+                    ? stats.currentStreak >= 5
+                      ? "bg-gradient-to-br from-orange-400 via-red-500 to-orange-600 shadow-[0_0_15px_rgba(251,146,60,0.8)]"
+                      : "bg-gradient-to-br from-green-400 to-green-600 shadow-[0_0_10px_rgba(34,197,94,0.5)]"
+                    : "bg-[#2E2D2D]"
+                }`}
+              >
+                {/* Efecto de brillo para racha de 5 */}
+                {stats.currentStreak >= 5 && stats.currentStreak >= level && (
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-gradient-to-br from-yellow-300 to-orange-500"
+                    animate={{
+                      opacity: [0.3, 0.8, 0.3],
+                      scale: [1, 1.4, 1],
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      delay: level * 0.2,
+                    }}
+                  />
+                )}
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Texto de racha */}
+          <motion.p 
+            className="text-[8px] text-gray-400 uppercase tracking-wider relative z-10"
+            animate={{
+              color: stats.currentStreak >= 5 ? "#fb923c" : "#9ca3af"
+            }}
+          >
+            Racha: {stats.currentStreak} {stats.currentStreak === 1 ? "victoria" : "victorias"}
+          </motion.p>
+        </div>
 
         {/* Círculos de eficacia */}
         <div className="grid grid-cols-3 gap-3">
           {/* Círculo de eficacia total */}
           <div className="flex justify-center">
             <div className="relative w-20 h-20">
-              <svg className="w-full h-full transform -rotate-90">
-                <circle
-                  cx="40"
-                  cy="40"
-                  r="35"
-                  fill="none"
-                  className="stroke-[#2E2D2D]"
-                  strokeWidth="5"
-                />
-                <motion.circle
-                  cx="40"
-                  cy="40"
-                  r="35"
-                  fill="none"
-                  className="stroke-blue-500"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  initial={{ strokeDasharray: "0, 220" }}
-                  animate={{ strokeDasharray: `${stats.totalWinRate * 2.2}, 220` }}
-                  transition={{ duration: 3 }}
-                />
-              </svg>
+              {stats.totalWinRate === 100 ? (
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ 
+                    type: "spring", 
+                    stiffness: 200, 
+                    damping: 15,
+                    duration: 1.5 
+                  }}
+                >
+                  <motion.div
+                    animate={{ 
+                      rotate: [0, -10, 10, -10, 0],
+                      scale: [1, 1.1, 1]
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatDelay: 3
+                    }}
+                  >
+                    <Medal className="w-16 h-16 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.7)]" />
+                  </motion.div>
+                </motion.div>
+              ) : (
+                <>
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle
+                      cx="40"
+                      cy="40"
+                      r="35"
+                      fill="none"
+                      className="stroke-[#2E2D2D]"
+                      strokeWidth="5"
+                    />
+                    <motion.circle
+                      cx="40"
+                      cy="40"
+                      r="35"
+                      fill="none"
+                      className={getColorByPercentage(stats.totalWinRate)}
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                      initial={{ strokeDasharray: "0, 220" }}
+                      animate={{ strokeDasharray: `${stats.totalWinRate * 2.2}, 220` }}
+                      transition={{ duration: 3 }}
+                    />
+                  </svg>
 
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-lg font-bold text-white">
-                  <AnimatedNumber value={stats.totalWinRate} />%
-                </span>
-                <span className="text-[7px] text-gray-400 uppercase tracking-wider">
-                  Eficacia
-                </span>
-                <span className="text-[6px] text-gray-500">
-                  Total
-                </span>
-              </div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-lg font-bold text-white">
+                      <AnimatedNumber value={stats.totalWinRate} />%
+                    </span>
+                    <span className="text-[7px] text-gray-400 uppercase tracking-wider">
+                      Eficacia
+                    </span>
+                    <span className="text-[6px] text-gray-500">
+                      Total
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
           {/* Círculo de eficacia últimos 30 */}
           <div className="flex justify-center">
             <div className="relative w-20 h-20">
-              <svg className="w-full h-full transform -rotate-90">
-                <circle
-                  cx="40"
-                  cy="40"
-                  r="35"
-                  fill="none"
-                  className="stroke-[#2E2D2D]"
-                  strokeWidth="5"
-                />
-                <motion.circle
-                  cx="40"
-                  cy="40"
-                  r="35"
-                  fill="none"
-                  className="stroke-green-500"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  initial={{ strokeDasharray: "0, 220" }}
-                  animate={{ strokeDasharray: `${stats.last30WinRate * 2.2}, 220` }}
-                  transition={{ duration: 3 }}
-                />
-              </svg>
+              {stats.last30WinRate === 100 ? (
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ 
+                    type: "spring", 
+                    stiffness: 200, 
+                    damping: 15,
+                    duration: 1.5 
+                  }}
+                >
+                  <motion.div
+                    animate={{ 
+                      rotate: [0, -10, 10, -10, 0],
+                      scale: [1, 1.1, 1]
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatDelay: 3
+                    }}
+                  >
+                    <Medal className="w-16 h-16 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.7)]" />
+                  </motion.div>
+                </motion.div>
+              ) : (
+                <>
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle
+                      cx="40"
+                      cy="40"
+                      r="35"
+                      fill="none"
+                      className="stroke-[#2E2D2D]"
+                      strokeWidth="5"
+                    />
+                    <motion.circle
+                      cx="40"
+                      cy="40"
+                      r="35"
+                      fill="none"
+                      className={getColorByPercentage(stats.last30WinRate)}
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                      initial={{ strokeDasharray: "0, 220" }}
+                      animate={{ strokeDasharray: `${stats.last30WinRate * 2.2}, 220` }}
+                      transition={{ duration: 3 }}
+                    />
+                  </svg>
 
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-lg font-bold text-white">
-                  <AnimatedNumber value={stats.last30WinRate} />%
-                </span>
-                <span className="text-[7px] text-gray-400 uppercase tracking-wider">
-                  Eficacia
-                </span>
-                <span className="text-[6px] text-gray-500">
-                  Últimos 30
-                </span>
-              </div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-lg font-bold text-white">
+                      <AnimatedNumber value={stats.last30WinRate} />%
+                    </span>
+                    <span className="text-[7px] text-gray-400 uppercase tracking-wider">
+                      Eficacia
+                    </span>
+                    <span className="text-[6px] text-gray-500">
+                      Últimos 30
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
 
           {/* Círculo de eficacia últimos 15 */}
           <div className="flex justify-center">
             <div className="relative w-20 h-20">
-              <svg className="w-full h-full transform -rotate-90">
-                <circle
-                  cx="40"
-                  cy="40"
-                  r="35"
-                  fill="none"
-                  className="stroke-[#2E2D2D]"
-                  strokeWidth="5"
-                />
-                <motion.circle
-                  cx="40"
-                  cy="40"
-                  r="35"
-                  fill="none"
-                  className="stroke-yellow-500"
-                  strokeWidth="5"
-                  strokeLinecap="round"
-                  initial={{ strokeDasharray: "0, 220" }}
-                  animate={{ strokeDasharray: `${stats.last15WinRate * 2.2}, 220` }}
-                  transition={{ duration: 3 }}
-                />
-              </svg>
+              {stats.last15WinRate === 100 ? (
+                <motion.div
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={{ scale: 0, rotate: -180 }}
+                  animate={{ scale: 1, rotate: 0 }}
+                  transition={{ 
+                    type: "spring", 
+                    stiffness: 200, 
+                    damping: 15,
+                    duration: 1.5 
+                  }}
+                >
+                  <motion.div
+                    animate={{ 
+                      rotate: [0, -10, 10, -10, 0],
+                      scale: [1, 1.1, 1]
+                    }}
+                    transition={{ 
+                      duration: 2,
+                      repeat: Infinity,
+                      repeatDelay: 3
+                    }}
+                  >
+                    <Medal className="w-16 h-16 text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.7)]" />
+                  </motion.div>
+                </motion.div>
+              ) : (
+                <>
+                  <svg className="w-full h-full transform -rotate-90">
+                    <circle
+                      cx="40"
+                      cy="40"
+                      r="35"
+                      fill="none"
+                      className="stroke-[#2E2D2D]"
+                      strokeWidth="5"
+                    />
+                    <motion.circle
+                      cx="40"
+                      cy="40"
+                      r="35"
+                      fill="none"
+                      className={getColorByPercentage(stats.last15WinRate)}
+                      strokeWidth="5"
+                      strokeLinecap="round"
+                      initial={{ strokeDasharray: "0, 220" }}
+                      animate={{ strokeDasharray: `${stats.last15WinRate * 2.2}, 220` }}
+                      transition={{ duration: 3 }}
+                    />
+                  </svg>
 
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-lg font-bold text-white">
-                  <AnimatedNumber value={stats.last15WinRate} />%
-                </span>
-                <span className="text-[7px] text-gray-400 uppercase tracking-wider">
-                  Eficacia
-                </span>
-                <span className="text-[6px] text-gray-500">
-                  Últimos 15
-                </span>
-              </div>
+                  <div className="absolute inset-0 flex flex-col items-center justify-center">
+                    <span className="text-lg font-bold text-white">
+                      <AnimatedNumber value={stats.last15WinRate} />%
+                    </span>
+                    <span className="text-[7px] text-gray-400 uppercase tracking-wider">
+                      Eficacia
+                    </span>
+                    <span className="text-[6px] text-gray-500">
+                      Últimos 15
+                    </span>
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

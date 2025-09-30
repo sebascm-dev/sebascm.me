@@ -144,11 +144,11 @@ export default function SetsChart({ matchpadel = [] }: { matchpadel: MatchPadel[
         <div className="flex justify-center gap-6 mt-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-            <span className="text-xs text-gray-100/50">Sets Totales</span>
+            <span className="text-xs text-gray-100/50">Totales</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-xs text-gray-100/50">Sets Ganados</span>
+            <span className="text-xs text-gray-100/50">Ganados</span>
           </div>
         </div>
       </article>

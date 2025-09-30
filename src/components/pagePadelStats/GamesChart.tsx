@@ -161,15 +161,15 @@ export default function GamesChart({ matchpadel = [] }: { matchpadel: MatchPadel
         <div className="flex justify-center gap-4 mt-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-            <span className="text-xs text-gray-100/50">Juegos Totales</span>
+            <span className="text-xs text-gray-100/50">Totales</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-xs text-gray-100/50">Juegos Ganados</span>
+            <span className="text-xs text-gray-100/50">Ganados</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-red-500"></div>
-            <span className="text-xs text-gray-100/50">Juegos Perdidos</span>
+            <span className="text-xs text-gray-100/50">Perdidos</span>
           </div>
         </div>
       </article>
