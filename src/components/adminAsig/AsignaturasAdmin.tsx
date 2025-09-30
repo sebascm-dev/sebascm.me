@@ -22,7 +22,17 @@ interface Asignatura {
     nota?: number;
     convocatoria?: number;
     anio_academico?: string;
-    estado?: string | null;
+    estado?: string;
+    turno?: string;
+    matriculacion?: string;
+    url?: string;
+    profesor_responsable?: string;
+    mail_profesor?: string;
+    telefono_profesor?: string;
+    despacho?: string;
+    tutorias?: string;
+    fecha_inicio?: string;
+    fecha_fin?: string;
 }
 
 interface AsignaturasAdminProps {
