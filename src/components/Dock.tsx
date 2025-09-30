@@ -1,6 +1,6 @@
 'use client';
 
-import { MotionValue, motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { MotionValue, motion, useMotionValue, useSpring, useTransform, AnimatePresence } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 import { Link } from 'next-view-transitions';
 import { usePathname } from 'next/navigation'; // Hook para obtener la ruta actual
@@ -37,28 +37,31 @@ export default function Dock() {
   return (
     <>
       {/* Submenú flotante */}
-      {showSubmenu && (
-        <motion.div
-          initial={{ opacity: 0, y: 20, scale: 0.9 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 20, scale: 0.9 }}
-          onMouseMove={!isMobile ? (e) => mouseX.set(e.pageX) : undefined}
-          onMouseLeave={!isMobile ? () => mouseX.set(Infinity) : undefined}
-          className="fixed backdrop-blur-md bottom-28 left-0 right-0 z-50 mx-auto flex justify-center h-16 items-end gap-4 rounded-2xl bg-transparent border border-[#2E2D2D] px-4 pb-3 max-w-[300px] w-fit"
-        >
-          {submenuPages.map((page, i) => (
-            <AppIcon
-              key={i}
-              mouseX={mouseX}
-              href={page.href}
-              icon={page.icon}
-              isActive={pathname === page.href}
-              name={page.name}
-              isMobile={isMobile}
-            />
-          ))}
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {showSubmenu && (
+          <motion.div
+            initial={{ opacity: 0, y: 20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: 20, scale: 0.9 }}
+            transition={{ duration: 0.2 }}
+            onMouseMove={!isMobile ? (e) => mouseX.set(e.pageX) : undefined}
+            onMouseLeave={!isMobile ? () => mouseX.set(Infinity) : undefined}
+            className="fixed backdrop-blur-md bottom-28 left-0 right-0 z-50 mx-auto flex justify-center h-16 items-end gap-4 rounded-2xl bg-transparent border border-[#2E2D2D] px-4 pb-3 max-w-[300px] w-fit"
+          >
+            {submenuPages.map((page, i) => (
+              <AppIcon
+                key={i}
+                mouseX={mouseX}
+                href={page.href}
+                icon={page.icon}
+                isActive={pathname === page.href}
+                name={page.name}
+                isMobile={isMobile}
+              />
+            ))}
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Dock principal */}
       <motion.div
@@ -145,16 +148,19 @@ function AppIcon({
           </div>
         )}
         {/* Mostrar tooltip solo en desktop */}
-        {!isMobile && isHovered && (
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            className="absolute bottom-28 bg-[#D1D0D1] text-zinc-800 text-sm px-2 py-1 rounded-md shadow-lg"
-          >
-            {name}
-          </motion.div>
-        )}
+        <AnimatePresence>
+          {!isMobile && isHovered && (
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.15 }}
+              className="absolute bottom-28 bg-[#D1D0D1] text-zinc-800 text-sm px-2 py-1 rounded-md shadow-lg"
+            >
+              {name}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </motion.div>
     </Link>
   );
@@ -225,16 +231,19 @@ function MenuIcon({
       )}
 
       {/* Tooltip */}
-      {!isMobile && isHovered && (
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: 10 }}
-          className="absolute bottom-28 bg-[#D1D0D1] text-zinc-800 text-sm px-2 py-1 rounded-md shadow-lg whitespace-nowrap"
-        >
-          Más opciones
-        </motion.div>
-      )}
+      <AnimatePresence>
+        {!isMobile && isHovered && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ duration: 0.15 }}
+            className="absolute bottom-28 bg-[#D1D0D1] text-zinc-800 text-sm px-2 py-1 rounded-md shadow-lg whitespace-nowrap"
+          >
+            Más opciones
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 }
