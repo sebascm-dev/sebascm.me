@@ -40,24 +40,37 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
     // 3. Partidos ganados en total
     const totalWins = onlyMatches.filter((match) => match.resultado === 1).length
 
-    // 4. Últimos 10 partidos
-    const last10Matches = onlyMatches.slice(-25)
-    const last10Games = last10Matches.length
-    const last10Wins = last10Matches.filter((match) => match.resultado === 1).length
-    const last10WinRate = last10Games > 0
-      ? Math.round((last10Wins / last10Games) * 100)
+    // 4. Eficacia total
+    const totalWinRate = totalGames > 0
+      ? Math.round((totalWins / totalGames) * 100)
       : 0
 
-    // 5. Últimos 3 partidos (corregido: slice(-3) en lugar de -10)
-    const last3Matches = onlyMatches.slice(-25)
-    const last3Wins = last3Matches.filter((match) => match.resultado === 1).length
+    // 5. Últimos 30 partidos
+    const last30Matches = onlyMatches.slice(-30)
+    const last30Games = last30Matches.length
+    const last30Wins = last30Matches.filter((match) => match.resultado === 1).length
+    const last30WinRate = last30Games > 0
+      ? Math.round((last30Wins / last30Games) * 100)
+      : 0
+
+    // 6. Últimos 15 partidos
+    const last15Matches = onlyMatches.slice(-15)
+    const last15Games = last15Matches.length
+    const last15Wins = last15Matches.filter((match) => match.resultado === 1).length
+    const last15WinRate = last15Games > 0
+      ? Math.round((last15Wins / last15Games) * 100)
+      : 0
 
     return {
       totalGames,
-      last10Games,
       totalWins,
-      last3Wins,
-      last10WinRate,
+      totalWinRate,
+      last30Games,
+      last30Wins,
+      last30WinRate,
+      last15Games,
+      last15Wins,
+      last15WinRate,
     }
   }, [matchpadel])
 
@@ -70,33 +83,48 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
 
       <article className="flex flex-col gap-4 flex-1 justify-between">
         {/* Estadísticas principales */}
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-3 gap-4">
           {/* Totales: ganados/totales */}
           <div className="text-center">
             <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-2">
               Totales
             </p>
             <div className="flex items-baseline justify-center gap-1">
-              <span className="text-4xl font-bold text-white">
+              <span className="text-3xl font-bold text-white">
                 <AnimatedNumber value={stats.totalWins} />
               </span>
-              <span className="text-lg text-gray-500 font-medium">
+              <span className="text-sm text-gray-500 font-medium">
                 /<AnimatedNumber value={stats.totalGames} />
               </span>
             </div>
           </div>
 
-          {/* Últimos: ganados/totales */}
+          {/* Últimos 30: ganados/totales */}
           <div className="text-center">
             <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-2">
-              Últimos
+              Últimos 30
             </p>
             <div className="flex items-baseline justify-center gap-1">
-              <span className="text-4xl font-bold text-white">
-                <AnimatedNumber value={stats.last3Wins} />
+              <span className="text-3xl font-bold text-white">
+                <AnimatedNumber value={stats.last30Wins} />
               </span>
-              <span className="text-lg text-gray-500 font-medium">
-                /<AnimatedNumber value={stats.last10Games} />
+              <span className="text-sm text-gray-500 font-medium">
+                /<AnimatedNumber value={stats.last30Games} />
+              </span>
+            </div>
+          </div>
+
+          {/* Últimos 15: ganados/totales */}
+          <div className="text-center">
+            <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-2">
+              Últimos 15
+            </p>
+            <div className="flex items-baseline justify-center gap-1">
+              <span className="text-3xl font-bold text-white">
+                <AnimatedNumber value={stats.last15Wins} />
+              </span>
+              <span className="text-sm text-gray-500 font-medium">
+                /<AnimatedNumber value={stats.last15Games} />
               </span>
             </div>
           </div>
@@ -105,42 +133,125 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
         {/* Separador */}
         <hr className="border-t border-[#2E2D2D]" />
 
-        {/* Círculo de eficacia */}
-        <div className="flex justify-center">
-          <div className="relative w-28 h-28">
-            <svg className="w-full h-full transform -rotate-90">
-              <circle
-                cx="56"
-                cy="56"
-                r="50"
-                fill="none"
-                className="stroke-[#2E2D2D]"
-                strokeWidth="7"
-              />
-              <motion.circle
-                cx="56"
-                cy="56"
-                r="50"
-                fill="none"
-                className="stroke-green-500"
-                strokeWidth="7"
-                strokeLinecap="round"
-                initial={{ strokeDasharray: "0, 314" }}
-                animate={{ strokeDasharray: `${stats.last10WinRate * 3.14}, 314` }}
-                transition={{ duration: 3 }}
-              />
-            </svg>
+        {/* Círculos de eficacia */}
+        <div className="grid grid-cols-3 gap-3">
+          {/* Círculo de eficacia total */}
+          <div className="flex justify-center">
+            <div className="relative w-20 h-20">
+              <svg className="w-full h-full transform -rotate-90">
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="35"
+                  fill="none"
+                  className="stroke-[#2E2D2D]"
+                  strokeWidth="5"
+                />
+                <motion.circle
+                  cx="40"
+                  cy="40"
+                  r="35"
+                  fill="none"
+                  className="stroke-blue-500"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  initial={{ strokeDasharray: "0, 220" }}
+                  animate={{ strokeDasharray: `${stats.totalWinRate * 2.2}, 220` }}
+                  transition={{ duration: 3 }}
+                />
+              </svg>
 
-            <div className="absolute inset-0 flex flex-col items-center justify-center">
-              <span className="text-2xl font-bold text-white">
-                <AnimatedNumber value={stats.last10WinRate} />%
-              </span>
-              <span className="text-[9px] text-gray-400 uppercase tracking-wider mt-0.5">
-                Eficacia
-              </span>
-              <span className="text-[8px] text-gray-500">
-                Últimos
-              </span>
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-lg font-bold text-white">
+                  <AnimatedNumber value={stats.totalWinRate} />%
+                </span>
+                <span className="text-[7px] text-gray-400 uppercase tracking-wider">
+                  Eficacia
+                </span>
+                <span className="text-[6px] text-gray-500">
+                  Total
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Círculo de eficacia últimos 30 */}
+          <div className="flex justify-center">
+            <div className="relative w-20 h-20">
+              <svg className="w-full h-full transform -rotate-90">
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="35"
+                  fill="none"
+                  className="stroke-[#2E2D2D]"
+                  strokeWidth="5"
+                />
+                <motion.circle
+                  cx="40"
+                  cy="40"
+                  r="35"
+                  fill="none"
+                  className="stroke-green-500"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  initial={{ strokeDasharray: "0, 220" }}
+                  animate={{ strokeDasharray: `${stats.last30WinRate * 2.2}, 220` }}
+                  transition={{ duration: 3 }}
+                />
+              </svg>
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-lg font-bold text-white">
+                  <AnimatedNumber value={stats.last30WinRate} />%
+                </span>
+                <span className="text-[7px] text-gray-400 uppercase tracking-wider">
+                  Eficacia
+                </span>
+                <span className="text-[6px] text-gray-500">
+                  Últimos 30
+                </span>
+              </div>
+            </div>
+          </div>
+
+          {/* Círculo de eficacia últimos 15 */}
+          <div className="flex justify-center">
+            <div className="relative w-20 h-20">
+              <svg className="w-full h-full transform -rotate-90">
+                <circle
+                  cx="40"
+                  cy="40"
+                  r="35"
+                  fill="none"
+                  className="stroke-[#2E2D2D]"
+                  strokeWidth="5"
+                />
+                <motion.circle
+                  cx="40"
+                  cy="40"
+                  r="35"
+                  fill="none"
+                  className="stroke-yellow-500"
+                  strokeWidth="5"
+                  strokeLinecap="round"
+                  initial={{ strokeDasharray: "0, 220" }}
+                  animate={{ strokeDasharray: `${stats.last15WinRate * 2.2}, 220` }}
+                  transition={{ duration: 3 }}
+                />
+              </svg>
+
+              <div className="absolute inset-0 flex flex-col items-center justify-center">
+                <span className="text-lg font-bold text-white">
+                  <AnimatedNumber value={stats.last15WinRate} />%
+                </span>
+                <span className="text-[7px] text-gray-400 uppercase tracking-wider">
+                  Eficacia
+                </span>
+                <span className="text-[6px] text-gray-500">
+                  Últimos 15
+                </span>
+              </div>
             </div>
           </div>
         </div>

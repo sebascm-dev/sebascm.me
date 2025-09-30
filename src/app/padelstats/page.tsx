@@ -12,10 +12,10 @@ export default function padelstats() {
         mt-16 mb-32 w-[90%]
         ">
             <section className="flex flex-col lg:flex-row gap-4 mb-4">
-                <div className="w-full lg:w-3/4">
+                <div className="w-full lg:w-[70%]">
                     <FetchPadelTracker />
                 </div>
-                <div className="w-full lg:w-1/4">
+                <div className="w-full lg:w-[30%]">
                     <FetchPadelStatsMatch />
                 </div>
             </section>
