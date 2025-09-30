@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 
+import { SpeedInsights } from "@vercel/speed-insights/next"
+
 import { ViewTransitions } from "next-view-transitions";
 
 import "./globals.css";
