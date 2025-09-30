@@ -385,13 +385,19 @@ export default function AsignaturasAdmin({ asignaturas: asignaturasIniciales }: 
                 </div>
             </div>
 
+            {/* Separador visual */}
+            <div className="my-6 border-t border-[#2E2D2D]"></div>
+
             {/* Botón crear + Filtros */}
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-3 mb-4">
+            <div className="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 mb-6">
                 <button
                     onClick={handleCrear}
-                    className="px-3 py-1.5 text-sm bg-orange-500 hover:bg-orange-600 text-white rounded font-medium transition-colors duration-300"
+                    className="px-4 py-2.5 text-sm bg-orange-500 hover:bg-orange-600 text-white rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:shadow-orange-500/30 flex items-center gap-2 justify-center sm:justify-start w-full sm:w-auto"
                 >
-                    + Nueva
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                        <path d="M12 5v14M5 12h14"/>
+                    </svg>
+                    Nueva Asignatura
                 </button>
 
                 <FiltrosAsignaturas filtros={filtros} setFiltros={setFiltros} />
