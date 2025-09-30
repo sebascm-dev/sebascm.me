@@ -15,7 +15,7 @@ interface MatchPadel {
 
 export default function ResultsMatch({ matchpadel = [] }: { matchpadel: MatchPadel[] }) {
     return (
-        <div className="space-y-8 mt-8 md:mt-8 lg:mt-8">
+        <div className="space-y-4">
             {matchpadel.map((match) => {
                 const { id, fechaPartido, horaPartido, set1, set2, set3, resultado } = match
 

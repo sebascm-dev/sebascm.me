@@ -26,13 +26,14 @@ interface MatchPadel {
 // Registrar ChartJS
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler)
 
-// Función para extraer sets de un string como "6-2" y contar los ganados
-const contarSets = (set: string | null | undefined): { total: number; ganados: number } => {
+// Función para extraer juegos de un string como "6-2"
+const contarJuegos = (set: string | null | undefined): { total: number; ganados: number } => {
   if (!set) return { total: 0, ganados: 0 }
   const [juegosGanados, juegosPerdidos] = set.split(/[-/]/).map(Number)
+  if (isNaN(juegosGanados) || isNaN(juegosPerdidos)) return { total: 0, ganados: 0 }
   return {
-    total: 1,
-    ganados: juegosGanados > juegosPerdidos ? 1 : 0,
+    total: juegosGanados + juegosPerdidos,
+    ganados: juegosGanados,
   }
 }
 
@@ -42,49 +43,65 @@ const generateData = (matchpadel: MatchPadel[]) => {
   const currentMonth = new Date().getMonth() // 0 = Enero, 11 = Diciembre
 
   // Inicializar contadores
-  const setsTotalesPorMes = Array(12).fill(0)
-  const setsGanadosPorMes = Array(12).fill(0)
+  const juegostotalesPorMes = Array(12).fill(0)
+  const juegosGanadosPorMes = Array(12).fill(0)
+  const juegosPerdidosPorMes = Array(12).fill(0)
 
   matchpadel.forEach(match => {
     const monthIndex = new Date(match.fechaPartido).getMonth() // 0 = Enero, 11 = Diciembre
     if (monthIndex >= 0 && monthIndex < 12) {
-      const { total: total1, ganados: ganados1 } = contarSets(match.set1)
-      const { total: total2, ganados: ganados2 } = contarSets(match.set2)
-      const { total: total3, ganados: ganados3 } = contarSets(match.set3)
+      const { total: total1, ganados: ganados1 } = contarJuegos(match.set1)
+      const { total: total2, ganados: ganados2 } = contarJuegos(match.set2)
+      const { total: total3, ganados: ganados3 } = contarJuegos(match.set3)
 
-      setsTotalesPorMes[monthIndex] += total1 + total2 + total3
-      setsGanadosPorMes[monthIndex] += ganados1 + ganados2 + ganados3
+      const totalJuegos = total1 + total2 + total3
+      const ganadosJuegos = ganados1 + ganados2 + ganados3
+      const perdidosJuegos = totalJuegos - ganadosJuegos
+
+      juegostotalesPorMes[monthIndex] += totalJuegos
+      juegosGanadosPorMes[monthIndex] += ganadosJuegos
+      juegosPerdidosPorMes[monthIndex] += perdidosJuegos
     }
   })
 
   // Reorganizar meses para que el actual esté a la izquierda y los anteriores detrás
   const orderedLabels = []
-  const orderedSetsTotales = []
-  const orderedSetsGanados = []
+  const orderedJuegosTotales = []
+  const orderedJuegosGanados = []
+  const orderedJuegosPerdidos = []
 
   for (let i = 0; i < 12; i++) {
     const index = (currentMonth - i + 12) % 12 // Ajusta los índices para que sean correctos
     orderedLabels.unshift(months[index])
-    orderedSetsTotales.unshift(setsTotalesPorMes[index])
-    orderedSetsGanados.unshift(setsGanadosPorMes[index])
+    orderedJuegosTotales.unshift(juegostotalesPorMes[index])
+    orderedJuegosGanados.unshift(juegosGanadosPorMes[index])
+    orderedJuegosPerdidos.unshift(juegosPerdidosPorMes[index])
   }
 
   return {
     labels: orderedLabels,
     datasets: [
       {
-        label: "Sets Totales",
-        data: orderedSetsTotales,
+        label: "Juegos Totales",
+        data: orderedJuegosTotales,
         borderColor: "#3b82f6",
         backgroundColor: "rgba(59, 130, 246, 0.1)",
         tension: 0.4,
         fill: true,
       },
       {
-        label: "Sets Ganados",
-        data: orderedSetsGanados,
+        label: "Juegos Ganados",
+        data: orderedJuegosGanados,
         borderColor: "#22c55e",
         backgroundColor: "rgba(34, 197, 94, 0.1)",
+        tension: 0.4,
+        fill: true,
+      },
+      {
+        label: "Juegos Perdidos",
+        data: orderedJuegosPerdidos,
+        borderColor: "#ef4444",
+        backgroundColor: "rgba(239, 68, 68, 0.1)",
         tension: 0.4,
         fill: true,
       },
@@ -92,7 +109,7 @@ const generateData = (matchpadel: MatchPadel[]) => {
   }
 }
 
-export default function SetsChart({ matchpadel = [] }: { matchpadel: MatchPadel[] }) {
+export default function GamesChart({ matchpadel = [] }: { matchpadel: MatchPadel[] }) {
   const options = {
     responsive: true,
     maintainAspectRatio: false,
@@ -131,24 +148,28 @@ export default function SetsChart({ matchpadel = [] }: { matchpadel: MatchPadel[
   }
 
   return (
-    <div className="relative max-h-[350px] border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300">
+    <div className="relative max-h-[350px] border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300 mt-4">
 
       <article>
-        <p className="mb-6 text-sm text-gray-100/50 border-l-2 border-white/70 px-1.5 h-5">SETS</p>
+        <p className="mb-6 text-sm text-gray-100/50 border-l-2 border-white/70 px-1.5 h-5">JUEGOS</p>
 
         <div className="h-[133px] w-full">
           <Line data={generateData(matchpadel)} options={options} />
         </div>
 
         {/* Leyenda */}
-        <div className="flex justify-center gap-6 mt-4">
+        <div className="flex justify-center gap-4 mt-4">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-blue-500"></div>
-            <span className="text-xs text-gray-100/50">Sets Totales</span>
+            <span className="text-xs text-gray-100/50">Juegos Totales</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-green-500"></div>
-            <span className="text-xs text-gray-100/50">Sets Ganados</span>
+            <span className="text-xs text-gray-100/50">Juegos Ganados</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-3 h-3 rounded-full bg-red-500"></div>
+            <span className="text-xs text-gray-100/50">Juegos Perdidos</span>
           </div>
         </div>
       </article>

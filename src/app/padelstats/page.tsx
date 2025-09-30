@@ -1,5 +1,6 @@
 import FetchPadelResultsMatch from "@/components/pagePadelStats/FetchPadelResultsMatch";
 import FetchPadelSetsChart from "@/components/pagePadelStats/FetchPadelSetsChart";
+import FetchPadelGamesChart from "@/components/pagePadelStats/FetchPadelGamesChart";
 import FetchPadelStatsMatch from "@/components/pagePadelStats/FetchPadelStatsMatch";
 import FetchPadelTracker from "@/components/pagePadelStats/FetchPadelTracker";
 
@@ -23,8 +24,9 @@ export default function padelstats() {
             <section className="flex flex-col lg:flex-row gap-4">
                 <div className="w-full lg:w-1/2">
                     <FetchPadelSetsChart />
+                    <FetchPadelGamesChart />
 
-                    <div className="mt-8 hidden lg:grid grid-cols-2 gap-4">
+                    <div className="mt-4 hidden lg:grid grid-cols-2 gap-4">
                         <article className="relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300">
                             <p className="mb-2 text-sm text-gray-100/50 border-l-2 border-white/70 px-1.5 h-5">NOX ML10 Limited Edition</p>
                             <div className="flex justify-center items-center">
