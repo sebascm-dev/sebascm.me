@@ -38,10 +38,11 @@ export default function RootLayout({
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
           <BackgroundWeb />
+          <SpeedInsights />
           {children}
           <Dock />
         </body>
       </html>
-    </ViewTransitions>
+    </ViewTransitions >
   );
 }
