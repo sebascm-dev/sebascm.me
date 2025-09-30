@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 
+import { Analytics } from "@vercel/analytics/next"
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import { ViewTransitions } from "next-view-transitions";
@@ -37,8 +38,10 @@ export default function RootLayout({
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased`}
         >
-          <BackgroundWeb />
           <SpeedInsights />
+          <Analytics />
+          
+          <BackgroundWeb />
           {children}
           <Dock />
         </body>
