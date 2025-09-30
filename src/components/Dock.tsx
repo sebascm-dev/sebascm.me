@@ -57,6 +57,7 @@ export default function Dock() {
                 isActive={pathname === page.href}
                 name={page.name}
                 isMobile={isMobile}
+                onClick={() => setShowSubmenu(false)}
               />
             ))}
           </motion.div>
@@ -101,6 +102,7 @@ function AppIcon({
   isActive,
   name,
   isMobile,
+  onClick,
 }: {
   mouseX: MotionValue;
   href: string;
@@ -108,6 +110,7 @@ function AppIcon({
   isActive: boolean;
   name: string;
   isMobile: boolean;
+  onClick?: () => void;
 }) {
   const ref = useRef<HTMLDivElement>(null);
   const [isHovered, setIsHovered] = useState(false);
@@ -126,7 +129,7 @@ function AppIcon({
   const computedWidth = isMobile ? 40 : widthSpring;
 
   return (
-    <Link href={href}>
+    <Link href={href} onClick={onClick}>
       <motion.div
         ref={ref}
         style={{ width: computedWidth }}
