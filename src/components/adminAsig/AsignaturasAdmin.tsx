@@ -219,130 +219,169 @@ export default function AsignaturasAdmin({ asignaturas: asignaturasIniciales }: 
     return (
         <div>
             {/* Selector de Especialidad */}
-            <section className="mb-6 border-2 border-orange-500/30 rounded-lg p-4 bg-gradient-to-r from-orange-500/10 to-transparent">
-                <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-3">
-                    <div>
-                        <h3 className="text-sm font-bold text-white uppercase tracking-wide mb-1">
-                            🎯 Mi Especialidad
-                        </h3>
-                        <p className="text-[10px] text-gray-100/60">
-                            Selecciona tu rama para ver solo las asignaturas relevantes (240 ECTS totales)
-                        </p>
-                    </div>
-                    <div className="flex gap-2">
-                        <button
-                            onClick={() => handleCambiarRama('Ingeniería del Software')}
-                            className={`px-3 py-2 text-xs font-medium rounded transition-all duration-300 ${
-                                ramaElegida === 'Ingeniería del Software'
-                                    ? 'bg-blue-500 text-white border-2 border-blue-400'
-                                    : 'bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:bg-blue-500/20'
-                            }`}
-                        >
-                            Software
-                        </button>
-                        <button
-                            onClick={() => handleCambiarRama('Ingeniería de Computadores')}
-                            className={`px-3 py-2 text-xs font-medium rounded transition-all duration-300 ${
-                                ramaElegida === 'Ingeniería de Computadores'
-                                    ? 'bg-orange-500 text-white border-2 border-orange-400'
-                                    : 'bg-orange-500/10 text-orange-400 border border-orange-500/30 hover:bg-orange-500/20'
-                            }`}
-                        >
-                            Computadores
-                        </button>
-                        <button
-                            onClick={() => handleCambiarRama('Computación')}
-                            className={`px-3 py-2 text-xs font-medium rounded transition-all duration-300 ${
-                                ramaElegida === 'Computación'
-                                    ? 'bg-purple-500 text-white border-2 border-purple-400'
-                                    : 'bg-purple-500/10 text-purple-400 border border-purple-500/30 hover:bg-purple-500/20'
-                            }`}
-                        >
-                            Computación
-                        </button>
+            <section className="mb-4 sm:mb-6 border border-orange-500/30 rounded-lg p-3 sm:p-4 bg-gradient-to-br from-orange-500/5 via-transparent to-purple-500/5">
+                <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                        <div>
+                            <h3 className="text-xs sm:text-sm font-bold text-white uppercase tracking-wide flex items-center gap-2">
+                                <span className="text-orange-500">🎯</span>
+                                Mi Especialidad
+                            </h3>
+                            <p className="text-[10px] sm:text-xs text-gray-100/60 mt-0.5">
+                                Selecciona tu rama (240 ECTS)
+                            </p>
+                        </div>
                         {ramaElegida && (
                             <button
                                 onClick={() => handleCambiarRama('')}
-                                className="px-3 py-2 text-xs font-medium rounded bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 transition-all duration-300"
+                                className="px-2 py-1 text-[10px] sm:text-xs font-medium rounded bg-red-500/10 text-red-400 border border-red-500/30 hover:bg-red-500/20 transition-all duration-300 flex items-center gap-1"
                             >
-                                ✕ Ver todas
+                                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                                    <path d="M18 6l-12 12M6 6l12 12"/>
+                                </svg>
+                                <span className="hidden sm:inline">Ver todas</span>
                             </button>
                         )}
+                    </div>
+                    
+                    <div className="grid grid-cols-3 gap-2">
+                        <button
+                            onClick={() => handleCambiarRama('Ingeniería del Software')}
+                            className={`px-2 sm:px-3 py-2 sm:py-2.5 text-[10px] sm:text-xs font-semibold rounded-lg transition-all duration-300 ${
+                                ramaElegida === 'Ingeniería del Software'
+                                    ? 'bg-blue-500 text-white shadow-lg shadow-blue-500/50 scale-105 border-2 border-blue-400'
+                                    : 'bg-blue-500/10 text-blue-400 border border-blue-500/30 hover:bg-blue-500/20 hover:scale-105'
+                            }`}
+                        >
+                            <div className="flex flex-col items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="hidden sm:block">
+                                    <path d="M7 8h10M7 12h10M7 16h10"/>
+                                </svg>
+                                <span>Software</span>
+                            </div>
+                        </button>
+                        <button
+                            onClick={() => handleCambiarRama('Ingeniería de Computadores')}
+                            className={`px-2 sm:px-3 py-2 sm:py-2.5 text-[10px] sm:text-xs font-semibold rounded-lg transition-all duration-300 ${
+                                ramaElegida === 'Ingeniería de Computadores'
+                                    ? 'bg-orange-500 text-white shadow-lg shadow-orange-500/50 scale-105 border-2 border-orange-400'
+                                    : 'bg-orange-500/10 text-orange-400 border border-orange-500/30 hover:bg-orange-500/20 hover:scale-105'
+                            }`}
+                        >
+                            <div className="flex flex-col items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="hidden sm:block">
+                                    <rect x="4" y="4" width="16" height="16" rx="2"/>
+                                    <rect x="9" y="9" width="6" height="6"/>
+                                </svg>
+                                <span className="hidden sm:inline">Computadores</span>
+                                <span className="sm:hidden">Comp.</span>
+                            </div>
+                        </button>
+                        <button
+                            onClick={() => handleCambiarRama('Computación')}
+                            className={`px-2 sm:px-3 py-2 sm:py-2.5 text-[10px] sm:text-xs font-semibold rounded-lg transition-all duration-300 ${
+                                ramaElegida === 'Computación'
+                                    ? 'bg-purple-500 text-white shadow-lg shadow-purple-500/50 scale-105 border-2 border-purple-400'
+                                    : 'bg-purple-500/10 text-purple-400 border border-purple-500/30 hover:bg-purple-500/20 hover:scale-105'
+                            }`}
+                        >
+                            <div className="flex flex-col items-center gap-1">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="hidden sm:block">
+                                    <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9L12 3z"/>
+                                </svg>
+                                <span className="hidden sm:inline">Computación</span>
+                                <span className="sm:hidden">Comput.</span>
+                            </div>
+                        </button>
                     </div>
                 </div>
             </section>
 
             {/* Estadísticas */}
-            <section className="grid grid-cols-5 gap-3 mb-6">
-                <div className="border border-[#2E2D2D] rounded px-4 py-2 bg-[#1C1C1C]/50 text-center">
-                    <p className="text-[10px] text-gray-100/50 mb-1 uppercase tracking-wide">Total</p>
-                    <p className="text-xl font-bold text-white">{totalAsignaturas}</p>
+            <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3 mb-4 sm:mb-6">
+                <div className="border border-[#2E2D2D] rounded px-1.5 sm:px-4 py-2 sm:py-3 bg-[#1C1C1C]/50 text-center hover:bg-[#1C1C1C]/70 transition-colors">
+                    <p className="text-[8px] sm:text-[10px] text-gray-100/50 mb-0.5 sm:mb-1 uppercase tracking-wide">Total</p>
+                    <p className="text-base sm:text-xl font-bold text-white">{totalAsignaturas}</p>
                 </div>
-                <div className="border border-[#2E2D2D] rounded px-4 py-2 bg-[#1C1C1C]/50 text-center">
-                    <p className="text-[10px] text-gray-100/50 mb-1 uppercase tracking-wide">Superadas</p>
-                    <p className="text-xl font-bold text-green-400">{asignaturasSuperadas}</p>
+                <div className="border border-[#2E2D2D] rounded px-1.5 sm:px-4 py-2 sm:py-3 bg-[#1C1C1C]/50 text-center hover:bg-[#1C1C1C]/70 transition-colors">
+                    <p className="text-[8px] sm:text-[10px] text-gray-100/50 mb-0.5 sm:mb-1 uppercase tracking-wide">Superadas</p>
+                    <p className="text-base sm:text-xl font-bold text-green-400">{asignaturasSuperadas}</p>
                 </div>
-                <div className="border border-[#2E2D2D] rounded px-4 py-2 bg-[#1C1C1C]/50 text-center">
-                    <p className="text-[10px] text-gray-100/50 mb-1 uppercase tracking-wide">Créditos</p>
-                    <p className="text-xl font-bold text-white">{creditosSuperados}/{creditosTotales}</p>
+                <div className="border border-[#2E2D2D] rounded px-1.5 sm:px-4 py-2 sm:py-3 bg-[#1C1C1C]/50 text-center hover:bg-[#1C1C1C]/70 transition-colors col-span-2 sm:col-span-1">
+                    <p className="text-[8px] sm:text-[10px] text-gray-100/50 mb-0.5 sm:mb-1 uppercase tracking-wide">Créditos</p>
+                    <p className="text-sm sm:text-xl font-bold text-white">{creditosSuperados}<span className="text-xs sm:text-base text-gray-100/50">/{creditosTotales}</span></p>
                 </div>
-                <div className="border border-[#2E2D2D] rounded px-4 py-2 bg-[#1C1C1C]/50 text-center">
-                    <p className="text-[10px] text-gray-100/50 mb-1 uppercase tracking-wide">Media</p>
-                    <p className="text-xl font-bold text-blue-400">{notaMedia}</p>
+                <div className="border border-[#2E2D2D] rounded px-1.5 sm:px-4 py-2 sm:py-3 bg-[#1C1C1C]/50 text-center hover:bg-[#1C1C1C]/70 transition-colors">
+                    <p className="text-[8px] sm:text-[10px] text-gray-100/50 mb-0.5 sm:mb-1 uppercase tracking-wide">Media</p>
+                    <p className="text-base sm:text-xl font-bold text-blue-400">{notaMedia}</p>
                 </div>
-                <div className="border border-[#2E2D2D] rounded px-4 py-2 bg-[#1C1C1C]/50 text-center">
-                    <p className="text-[10px] text-gray-100/50 mb-1 uppercase tracking-wide">Progreso</p>
-                    <p className="text-xl font-bold text-purple-400">{((creditosSuperados / creditosTotales) * 100).toFixed(0)}%</p>
+                <div className="border border-[#2E2D2D] rounded px-1.5 sm:px-4 py-2 sm:py-3 bg-[#1C1C1C]/50 text-center hover:bg-[#1C1C1C]/70 transition-colors">
+                    <p className="text-[8px] sm:text-[10px] text-gray-100/50 mb-0.5 sm:mb-1 uppercase tracking-wide">Progreso</p>
+                    <p className="text-base sm:text-xl font-bold text-purple-400">{((creditosSuperados / creditosTotales) * 100).toFixed(0)}%</p>
                 </div>
             </section>
 
             {/* Leyenda de colores y estados */}
-            <div className="flex flex-wrap items-center gap-4 mb-4 text-xs">
-                {/* Colores de rama */}
-                <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-gray-500/50"></div>
-                    <span className="text-gray-100/60">Troncal</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                    <span className="text-gray-100/60">Software</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-orange-500"></div>
-                    <span className="text-gray-100/60">Computadores</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                    <span className="text-gray-100/60">Computación</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                    <span className="text-gray-100/60">Optativas</span>
-                </div>
-                
-                {/* Separador */}
-                <div className="w-px h-4 bg-gray-100/20"></div>
-                
-                {/* Estados */}
-                <div className="flex items-center gap-1">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-400">
-                        <circle cx="12" cy="12" r="9" />
-                        <path d="M9 12l2 2l4 -4" />
-                    </svg>
-                    <span className="text-gray-100/60">Superada</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded border-2 bg-blue-500 border-blue-500"></div>
-                    <span className="text-gray-100/60">Cursando</span>
-                </div>
-                <div className="flex items-center gap-1">
-                    <div className="w-3 h-3 rounded border-2 bg-red-500 border-red-500 flex items-center justify-center">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-white">
-                            <path d="M18 6l-12 12" />
-                            <path d="M6 6l12 12" />
-                        </svg>
+            <div className="mb-4 p-3 border border-[#2E2D2D] rounded-lg bg-[#1C1C1C]/30">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+                    {/* Colores de rama */}
+                    <div className="flex-1">
+                        <p className="text-[9px] font-bold text-gray-100/40 uppercase tracking-wider mb-2">Ramas</p>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs">
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full bg-gray-500/50"></div>
+                                <span className="text-gray-100/60">Troncal</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                                <span className="text-gray-100/60">Software</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full bg-orange-500"></div>
+                                <span className="text-gray-100/60 hidden sm:inline">Computadores</span>
+                                <span className="text-gray-100/60 sm:hidden">Comp.</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                                <span className="text-gray-100/60 hidden sm:inline">Computación</span>
+                                <span className="text-gray-100/60 sm:hidden">Comput.</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                                <span className="text-gray-100/60">Optativas</span>
+                            </div>
+                        </div>
                     </div>
-                    <span className="text-gray-100/60">Suspensa</span>
+                    
+                    {/* Separador */}
+                    <div className="h-px sm:h-auto sm:w-px bg-gray-100/20"></div>
+                    
+                    {/* Estados */}
+                    <div className="flex-1">
+                        <p className="text-[9px] font-bold text-gray-100/40 uppercase tracking-wider mb-2">Estados</p>
+                        <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-[10px] sm:text-xs">
+                            <div className="flex items-center gap-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-green-400">
+                                    <circle cx="12" cy="12" r="9" />
+                                    <path d="M9 12l2 2l4 -4" />
+                                </svg>
+                                <span className="text-gray-100/60">Superada</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-3 h-3 rounded border-2 bg-blue-500 border-blue-500"></div>
+                                <span className="text-gray-100/60">Cursando</span>
+                            </div>
+                            <div className="flex items-center gap-1.5">
+                                <div className="w-3 h-3 rounded border-2 bg-red-500 border-red-500 flex items-center justify-center">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="8" height="8" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="text-white">
+                                        <path d="M18 6l-12 12" />
+                                        <path d="M6 6l12 12" />
+                                    </svg>
+                                </div>
+                                <span className="text-gray-100/60">Suspensa</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
