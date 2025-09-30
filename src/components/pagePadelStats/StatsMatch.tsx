@@ -81,7 +81,7 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
         <p className="mt-0.5 font-bold text-sm text-white">Estadísticas Generales</p>
       </header>
 
-      <article className="flex flex-col gap-4 flex-1 justify-between">
+      <article className="flex flex-col gap-6 flex-1 justify-center">
         {/* Estadísticas principales */}
         <div className="grid grid-cols-3 gap-4">
           {/* Totales: ganados/totales */}
