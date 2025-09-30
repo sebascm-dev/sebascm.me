@@ -76,7 +76,7 @@ export default function ResultsMatch({ matchpadel = [] }: { matchpadel: MatchPad
                         ResultIcon = Dumbbell
                         break
                     case 3:
-                        label = "Torneo"
+                        label = "Competición"
                         textColor = "text-blue-500"
                         iconColor = "text-blue-500"
                         bgColor = "bg-blue-500/10"
