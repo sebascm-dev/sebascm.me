@@ -62,118 +62,85 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
   }, [matchpadel])
 
   return (
-    <div suppressHydrationWarning className="relative mt-8 border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300">
-      <header className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1">
+    <div suppressHydrationWarning className="relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-full flex flex-col hover:border-[#EDEDED]/30 transition-colors duration-300">
+      <header className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1 mb-6">
         <Sparkles className="w-5 h-5 text-white" />
         <p className="mt-0.5 font-bold text-sm text-white">Estadísticas Generales</p>
       </header>
 
-      <article>
-        <div className="grid grid-cols-3">
-          {/* Columna izquierda */}
-          <div className="flex flex-col items-center justify-center p-4">
-            <div className="text-center">
-              <p className="text-2xl md:text-4xl font-bold text-white">
-                <AnimatedNumber value={stats.totalGames} />
-              </p>
-              <p className="text-xs text-gray-100/50 uppercase tracking-wider mt-1">
-                Totales
-              </p>
-            </div>
-            <div className="text-center mt-4 border-t border-[#2E2D2D] pt-4 w-full">
-              <p className="text-xl md:text-2xl font-bold text-white">
-                <AnimatedNumber value={stats.last10Games} />
-              </p>
-              <p className="text-xs text-gray-100/50 uppercase tracking-wider mt-1">
-                Últimos
-              </p>
-            </div>
-          </div>
-
-          {/* Columna central */}
-          <div className="flex flex-col items-center justify-center p-4">
-            <div className="text-center">
-              <p className="text-2xl md:text-4xl font-bold text-white">
+      <article className="flex flex-col gap-4 flex-1 justify-between">
+        {/* Estadísticas principales */}
+        <div className="grid grid-cols-2 gap-6">
+          {/* Totales: ganados/totales */}
+          <div className="text-center">
+            <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-2">
+              Totales
+            </p>
+            <div className="flex items-baseline justify-center gap-1">
+              <span className="text-4xl font-bold text-white">
                 <AnimatedNumber value={stats.totalWins} />
-              </p>
-              <p className="text-xs text-gray-100/50 uppercase tracking-wider mt-1">
-                Ganados
-              </p>
-            </div>
-            <div className="text-center mt-4 border-t border-[#2E2D2D] pt-4 w-full">
-              <p className="text-xl md:text-2xl font-bold text-white">
-                <AnimatedNumber value={stats.last3Wins} />
-              </p>
-              <p className="text-xs text-gray-100/50 uppercase tracking-wider mt-1">
-                Ganados
-              </p>
+              </span>
+              <span className="text-lg text-gray-500 font-medium">
+                /<AnimatedNumber value={stats.totalGames} />
+              </span>
             </div>
           </div>
 
-          {/* Columna derecha - Círculo de eficacia */}
-          <div className="flex flex-col items-center justify-center p-4">
-            <div className="relative size-36">
-              {/* Versión para pantallas medianas/grandes */}
-              <svg className="w-full hidden md:block lg:block h-full transform -rotate-90">
-                {/* Círculo de fondo */}
-                <circle
-                  cx="72"
-                  cy="72"
-                  r="60"
-                  fill="none"
-                  className="stroke-[#2E2D2D]"
-                  strokeWidth="8"
-                />
-                {/* Círculo de progreso animado */}
-                <motion.circle
-                  cx="72"
-                  cy="72"
-                  r="60"
-                  fill="none"
-                  className="stroke-green-500"
-                  strokeWidth="8"
-                  strokeLinecap="round"
-                  initial={{ strokeDasharray: "0, 314" }}
-                  animate={{ strokeDasharray: `${stats.last10WinRate * 3.14}, 314` }}
-                  transition={{ duration: 3 }}
-                />
-              </svg>
+          {/* Últimos: ganados/totales */}
+          <div className="text-center">
+            <p className="text-[9px] text-gray-400 uppercase tracking-wider mb-2">
+              Últimos
+            </p>
+            <div className="flex items-baseline justify-center gap-1">
+              <span className="text-4xl font-bold text-white">
+                <AnimatedNumber value={stats.last3Wins} />
+              </span>
+              <span className="text-lg text-gray-500 font-medium">
+                /<AnimatedNumber value={stats.last10Games} />
+              </span>
+            </div>
+          </div>
+        </div>
 
-              {/* Versión para pantallas pequeñas */}
-              <svg className="w-full block md:hidden lg:hidden h-full transform -rotate-90">
-                <circle
-                  cx="72"
-                  cy="72"
-                  r="50"
-                  fill="none"
-                  className="stroke-[#2E2D2D]"
-                  strokeWidth="8"
-                />
-                <motion.circle
-                  cx="72"
-                  cy="72"
-                  r="50"
-                  fill="none"
-                  className="stroke-green-500"
-                  strokeWidth="8"
-                  strokeLinecap="round"
-                  initial={{ strokeDasharray: "0, 314" }}
-                  animate={{ strokeDasharray: `${stats.last10WinRate * 3.14}, 314` }}
-                  transition={{ duration: 3 }}
-                />
-              </svg>
+        {/* Separador */}
+        <hr className="border-t border-[#2E2D2D]" />
 
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-2xl font-bold text-white">
-                  <AnimatedNumber value={stats.last10WinRate} />%
-                </span>
-                <span className="text-xs text-gray-100/50 uppercase tracking-wider mt-1">
-                  Eficacia
-                </span>
-                <span className="text-[0.65rem] text-gray-100/50">
-                  Últimos 10
-                </span>
-              </div>
+        {/* Círculo de eficacia */}
+        <div className="flex justify-center">
+          <div className="relative w-28 h-28">
+            <svg className="w-full h-full transform -rotate-90">
+              <circle
+                cx="56"
+                cy="56"
+                r="50"
+                fill="none"
+                className="stroke-[#2E2D2D]"
+                strokeWidth="7"
+              />
+              <motion.circle
+                cx="56"
+                cy="56"
+                r="50"
+                fill="none"
+                className="stroke-green-500"
+                strokeWidth="7"
+                strokeLinecap="round"
+                initial={{ strokeDasharray: "0, 314" }}
+                animate={{ strokeDasharray: `${stats.last10WinRate * 3.14}, 314` }}
+                transition={{ duration: 3 }}
+              />
+            </svg>
+
+            <div className="absolute inset-0 flex flex-col items-center justify-center">
+              <span className="text-2xl font-bold text-white">
+                <AnimatedNumber value={stats.last10WinRate} />%
+              </span>
+              <span className="text-[9px] text-gray-400 uppercase tracking-wider mt-0.5">
+                Eficacia
+              </span>
+              <span className="text-[8px] text-gray-500">
+                Últimos
+              </span>
             </div>
           </div>
         </div>

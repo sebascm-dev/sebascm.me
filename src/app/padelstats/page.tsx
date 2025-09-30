@@ -11,10 +11,18 @@ export default function padelstats() {
         md:p-4 md:mt-20 md:w-[85%]
         mt-16 mb-32 w-[90%]
         ">
-            <FetchPadelTracker />
-            <section className="flex flex-col lg:flex-row gap-4">
-                <div className="wfull lg:w-1/2">
+            <section className="flex flex-col lg:flex-row gap-4 mb-4">
+                <div className="w-full lg:w-3/4">
+                    <FetchPadelTracker />
+                </div>
+                <div className="w-full lg:w-1/4">
                     <FetchPadelStatsMatch />
+                </div>
+            </section>
+
+            <section className="flex flex-col lg:flex-row gap-4">
+                <div className="w-full lg:w-1/2">
+                    <FetchPadelSetsChart />
 
                     <div className="mt-8 hidden lg:grid grid-cols-2 gap-4">
                         <article className="relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300">
@@ -34,8 +42,7 @@ export default function padelstats() {
                 </div>
 
 
-                <div className="wfull lg:w-1/2">
-                    <FetchPadelSetsChart />
+                <div className="w-full lg:w-1/2">
                     <FetchPadelResultsMatch />
 
                     <div className="mt-8 lg:hidden grid grid-cols-2 gap-4">

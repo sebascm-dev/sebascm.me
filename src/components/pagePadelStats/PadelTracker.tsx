@@ -20,9 +20,11 @@ interface MatchPadel {
 }
 
 const MONTHS = [
-  "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-  "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+  "Ene", "Feb", "Mar", "Abr", "May", "Jun",
+  "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"
 ];
+
+const WEEKDAYS = ["L", "M", "X", "J", "V", "S", "D"];
 
 const COLOR_MAP: Record<number, string> = {
   0: "#ed5c53", // Partido Perdido
@@ -69,9 +71,23 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
       return;
     }
 
-    const endDate = new Date();
-    const startDate = new Date(endDate);
-    startDate.setDate(startDate.getDate() - 364);
+    const today = new Date();
+    
+    // Total de días a mostrar (52 semanas = 364 días)
+    const totalDays = 52 * 7;
+    
+    // Fecha de inicio: retroceder 364 días desde hoy
+    const startDate = new Date(today);
+    startDate.setDate(today.getDate() - totalDays + 1);
+    
+    // Ajustar para empezar en lunes (día 1)
+    const startDayOfWeek = startDate.getDay();
+    const daysToMonday = startDayOfWeek === 0 ? 6 : startDayOfWeek - 1;
+    startDate.setDate(startDate.getDate() - daysToMonday);
+    
+    // Calcular cuántos días incluir hasta hoy desde el domingo de inicio
+    const endDate = new Date(today);
+    const daysDiff = Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24)) + 1;
 
     const playedDates = new Map<string, number[]>();
     matchpadel.forEach(match => {
@@ -82,7 +98,8 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
       playedDates.get(dateFormatted)!.push(match.resultado);
     });
 
-    const daysArray = Array.from({ length: 365 }, (_, i) => {
+    // Crear array de días desde startDate hasta hoy
+    const daysArray = Array.from({ length: daysDiff }, (_, i) => {
       const date = new Date(startDate);
       date.setDate(startDate.getDate() + i);
       const dateString = formatLocalDate(date);
@@ -111,74 +128,137 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
     setSelectedDay(null);
   };
 
+  // Organizar días en semanas (cada semana = 7 días en columna, empezando en lunes)
+  const allWeeks = [];
+  for (let i = 0; i < days.length; i += 7) {
+    allWeeks.push(days.slice(i, i + 7));
+  }
+
+  // En desktop (lg), mostrar solo los últimos 10 meses (aproximadamente 43 semanas)
+  const weeksToShow = 43;
+  const weeks = allWeeks.slice(-weeksToShow);
+
+  // Calcular etiquetas de meses
+  const monthLabels: Array<{ month: string; weekIndex: number } | null> = [];
+  let lastMonth = -1;
+  
+  weeks.forEach((week, index) => {
+    if (week.length === 0) {
+      monthLabels.push(null);
+      return;
+    }
+    
+    const firstDay = week[0].date;
+    const [day, month, year] = firstDay.split('-');
+    const currentMonth = parseInt(month) - 1;
+    
+    if (currentMonth !== lastMonth && parseInt(day) <= 7) {
+      monthLabels.push({ month: MONTHS[currentMonth], weekIndex: index });
+      lastMonth = currentMonth;
+    } else {
+      monthLabels.push(null);
+    }
+  });
+
   return (
-    <div className="relative min-h-[400px] md:min-h-72 lg:min-h-64 border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-fit hover:border-[#EDEDED]/30 transition-colors duration-300">
-      <header className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1 mb-4">
+    <div className="relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-full flex flex-col hover:border-[#EDEDED]/30 transition-colors duration-300">
+      <header className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1 mb-6">
         <Volleyball className="w-5 h-5 text-white" />
         <p className="mt-0.5 font-bold text-sm text-white">Padel Game Tracker</p>
       </header>
 
-      <p className="my-4 text-sm text-gray-100/50 border-l-2 border-white/70 px-1.5 h-5">
-        Últimos 365 Días de Actividad
+      <p className="mb-4 text-sm text-gray-100/50 border-l-2 border-white/70 px-1.5 h-5">
+        Últimos 10 Meses de Actividad
       </p>
 
-      <div className="flex flex-col">
-        <div className="flex mb-1">
-          {MONTHS.map((month) => (
-            <div key={month} className="flex-1 text-center text-xs text-gray-100/50">
-              {month}
+      <div className="overflow-x-auto pb-2 flex-1 flex items-center">
+        <div className="flex gap-2 w-full">
+          {/* Días de la semana a la izquierda */}
+           <div className="flex flex-col justify-between pr-2 flex-shrink-0">
+             <div className="h-5"></div> {/* Espacio para los meses */}
+             {WEEKDAYS.map((day, index) => (
+               <div 
+                 key={day}
+                 className="h-[14px] text-[10px] text-gray-400 flex items-center"
+               >
+                 {day}
+               </div>
+             ))}
+           </div>
+
+          <div className="flex-1 min-w-0">
+            {/* Etiquetas de meses arriba */}
+            <div className="flex justify-between mb-1.5 h-5">
+              {monthLabels.map((label, index) => (
+                <div 
+                  key={index} 
+                  className="text-[10px] text-gray-400 flex items-start"
+                  style={{ 
+                    width: `${100 / weeks.length}%`,
+                    visibility: label ? 'visible' : 'hidden'
+                  }}
+                >
+                  {label ? label.month : ''}
+                </div>
+              ))}
             </div>
-          ))}
+
+            {/* Grid de semanas */}
+            <div className="grid gap-[4px]" style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}>
+              {weeks.map((week, weekIndex) => (
+                <div key={weekIndex} className="flex flex-col gap-[4px]">
+                  {week.map((day, dayIndex) => {
+                    const ganados = day.resultados.filter(r => r === 1).length;
+                    const perdidos = day.resultados.filter(r => r === 0).length;
+                    const entrenamientos = day.resultados.filter(r => r === 2).length;
+                    const torneos = day.resultados.filter(r => r === 3).length;
+
+                    const titleParts = [];
+                    if (ganados > 0) titleParts.push(`Ganados: ${ganados}`);
+                    if (perdidos > 0) titleParts.push(`Perdidos: ${perdidos}`);
+                    if (entrenamientos > 0) titleParts.push(`Entrenamientos: ${entrenamientos}`);
+                    if (torneos > 0) titleParts.push(`Torneos: ${torneos}`);
+
+                    return (
+                      <motion.div
+                        key={day.date}
+                        custom={weekIndex * 7 + dayIndex}
+                        initial="hidden"
+                        animate="animate"
+                        variants={squareVariants}
+                        className="w-full aspect-square rounded-[2px] cursor-pointer hover:ring-2 hover:ring-white/40 transition-all duration-200"
+                        style={{
+                          background: day.resultados.length > 1
+                            ? `conic-gradient(${day.resultados.map((r, i) => `${COLOR_MAP[r] || '#6B7280'} ${(i / day.resultados.length) * 100}%, ${COLOR_MAP[r] || '#6B7280'} ${(i + 1) / day.resultados.length * 100}%`).join(", ")})`
+                            : day.resultados.length === 1
+                              ? COLOR_MAP[day.resultados[0]] || '#6B7280'
+                              : "#1a1a1a",
+                          border: day.resultados.length === 0 ? '1px solid #2a2a2a' : 'none',
+                        }}
+                        title={`${day.date}: ${day.played ? titleParts.join(", ") : "Sin Jugar"}`}
+                        onClick={() => openModal(day)}
+                      ></motion.div>
+                    );
+                  })}
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
-      <div className="flex flex-wrap">
-        {days.map((day, index) => {
-          const ganados = day.resultados.filter(r => r === 1).length;
-          const perdidos = day.resultados.filter(r => r === 0).length;
-          const entrenamientos = day.resultados.filter(r => r === 2).length;
-          const torneos = day.resultados.filter(r => r === 3).length;
-
-          const titleParts = [];
-          if (ganados > 0) titleParts.push(`Ganados: ${ganados}`);
-          if (perdidos > 0) titleParts.push(`Perdidos: ${perdidos}`);
-          if (entrenamientos > 0) titleParts.push(`Entrenamientos: ${entrenamientos}`);
-          if (torneos > 0) titleParts.push(`Torneos: ${torneos}`);
-
-          return (
-            <motion.div
-              key={day.date}
-              custom={index}
-              initial="hidden"
-              animate="animate"
-              variants={squareVariants}
-              className="w-3 h-3 m-[1px] rounded-sm cursor-pointer scale-100 hover:scale-125 transition-transform duration-300"
-              style={{
-                background: day.resultados.length > 1
-                  ? `conic-gradient(${day.resultados.map((r, i) => `${COLOR_MAP[r] || '#6B7280'} ${(i / day.resultados.length) * 100}%, ${COLOR_MAP[r] || '#6B7280'} ${(i + 1) / day.resultados.length * 100}%`).join(", ")})`
-                  : day.resultados.length === 1
-                    ? COLOR_MAP[day.resultados[0]] || '#6B7280'
-                    : "#2E2D2D",
-              }}
-              title={`${day.date}: ${day.played ? titleParts.join(", ") : "Sin Jugar"}`}
-              onClick={() => openModal(day)}
-            ></motion.div>
-          );
-        })}
-      </div>
-
-      <div className="flex items-center justify-end text-xs text-gray-100/50 absolute bottom-4 right-4">
-        <div className="flex items-center gap-1">
-          <div className="w-3 h-3 m-[1px] rounded-sm bg-[#64a377]"></div>
-          <span className="ml-1 mt-0.5">Ganados: {totalGanados}</span>
+      <div className="flex items-center justify-end text-[10px] text-gray-400 mt-4 gap-3 flex-wrap">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-sm bg-[#64a377]"></div>
+          <span>Ganados: {totalGanados}</span>
         </div>
-        <div className="flex items-center gap-1 ml-4">
-          <div className="w-3 h-3 m-[1px] rounded-sm bg-[#ed5c53]"></div>
-          <span className="ml-1 mt-0.5">Perdidos: {totalPerdidos}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-sm bg-[#ed5c53]"></div>
+          <span>Perdidos: {totalPerdidos}</span>
         </div>
-        <div className="flex items-center gap-1 ml-4">
-          <div className="w-3 h-3 m-[1px] rounded-sm bg-[#b5b670]"></div>
-          <span className="ml-1 mt-0.5">Entrenamiento: {totalEntrenamiento}</span>
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-sm bg-[#b5b670]"></div>
+          <span>Entrenamiento: {totalEntrenamiento}</span>
         </div>
       </div>
 
