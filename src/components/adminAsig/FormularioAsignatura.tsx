@@ -18,6 +18,7 @@ interface Asignatura {
     nota?: number;
     convocatoria?: number;
     anio_academico?: string;
+    estado?: string | null;
 }
 
 interface FormularioAsignaturaProps {
