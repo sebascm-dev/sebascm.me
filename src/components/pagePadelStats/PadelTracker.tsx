@@ -134,17 +134,17 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
     allWeeks.push(days.slice(i, i + 7));
   }
 
-  // En desktop (lg), mostrar solo los últimos 10 meses (aproximadamente 43 semanas)
-  const weeksToShow = 43;
-  const weeks = allWeeks.slice(-weeksToShow);
+  // Desktop: últimos 10 meses (~43 semanas), Mobile: últimas 13 semanas
+  const weeksDesktop = allWeeks.slice(-43);
+  const weeksMobile = allWeeks.slice(-13);
 
-  // Calcular etiquetas de meses
-  const monthLabels: Array<{ month: string; weekIndex: number } | null> = [];
-  let lastMonth = -1;
+  // Calcular etiquetas de meses para desktop
+  const monthLabelsDesktop: Array<{ month: string; weekIndex: number } | null> = [];
+  let lastMonthDesktop = -1;
   
-  weeks.forEach((week, index) => {
+  weeksDesktop.forEach((week, index) => {
     if (week.length === 0) {
-      monthLabels.push(null);
+      monthLabelsDesktop.push(null);
       return;
     }
     
@@ -152,11 +152,11 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
     const [day, month, year] = firstDay.split('-');
     const currentMonth = parseInt(month) - 1;
     
-    if (currentMonth !== lastMonth && parseInt(day) <= 7) {
-      monthLabels.push({ month: MONTHS[currentMonth], weekIndex: index });
-      lastMonth = currentMonth;
+    if (currentMonth !== lastMonthDesktop && parseInt(day) <= 7) {
+      monthLabelsDesktop.push({ month: MONTHS[currentMonth], weekIndex: index });
+      lastMonthDesktop = currentMonth;
     } else {
-      monthLabels.push(null);
+      monthLabelsDesktop.push(null);
     }
   });
 
@@ -168,33 +168,32 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
       </header>
 
       <p className="mb-4 text-sm text-gray-100/50 border-l-2 border-white/70 px-1.5 h-5">
-        Últimos 10 Meses de Actividad
+        <span className="hidden lg:inline">Últimos 10 Meses de Actividad</span>
+        <span className="lg:hidden">Últimas 13 Semanas de Actividad</span>
       </p>
 
-      <div className="overflow-x-auto pb-2 flex-1 flex items-center">
+      {/* Desktop: Columnas verticales (semanas) */}
+      <div className="hidden lg:block overflow-x-auto pb-2 flex-1">
         <div className="flex gap-2 w-full">
           {/* Días de la semana a la izquierda */}
-           <div className="flex flex-col justify-between pr-2 flex-shrink-0">
-             <div className="h-5"></div> {/* Espacio para los meses */}
-             {WEEKDAYS.map((day, index) => (
-               <div 
-                 key={day}
-                 className="h-[14px] text-[10px] text-gray-400 flex items-center"
-               >
-                 {day}
-               </div>
-             ))}
-           </div>
+          <div className="flex flex-col justify-between pr-2 flex-shrink-0">
+            <div className="h-5"></div>
+            {WEEKDAYS.map((day) => (
+              <div key={day} className="h-[14px] text-[10px] text-gray-400 flex items-center">
+                {day}
+              </div>
+            ))}
+          </div>
 
           <div className="flex-1 min-w-0">
             {/* Etiquetas de meses arriba */}
             <div className="flex justify-between mb-1.5 h-5">
-              {monthLabels.map((label, index) => (
+              {monthLabelsDesktop.map((label, index) => (
                 <div 
                   key={index} 
                   className="text-[10px] text-gray-400 flex items-start"
                   style={{ 
-                    width: `${100 / weeks.length}%`,
+                    width: `${100 / weeksDesktop.length}%`,
                     visibility: label ? 'visible' : 'hidden'
                   }}
                 >
@@ -203,9 +202,9 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
               ))}
             </div>
 
-            {/* Grid de semanas */}
-            <div className="grid gap-[4px]" style={{ gridTemplateColumns: `repeat(${weeks.length}, 1fr)` }}>
-              {weeks.map((week, weekIndex) => (
+            {/* Grid de semanas (columnas) */}
+            <div className="grid gap-[4px]" style={{ gridTemplateColumns: `repeat(${weeksDesktop.length}, 1fr)` }}>
+              {weeksDesktop.map((week, weekIndex) => (
                 <div key={weekIndex} className="flex flex-col gap-[4px]">
                   {week.map((day, dayIndex) => {
                     const ganados = day.resultados.filter(r => r === 1).length;
@@ -243,6 +242,92 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
                 </div>
               ))}
             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Mobile: Filas horizontales (semanas) */}
+      <div className="lg:hidden pb-2 flex-1">
+        <div className="flex flex-col gap-1.5 w-full">
+          {/* Días de la semana arriba */}
+          <div className="flex w-full">
+            <div className="w-10 flex-shrink-0"></div> {/* Espacio para meses */}
+            <div className="flex-1 grid grid-cols-7 gap-[3px]">
+              {WEEKDAYS.map((day) => (
+                <div key={day} className="text-[9px] text-gray-400 text-center">
+                  {day}
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Grid de semanas (filas) */}
+          <div className="flex flex-col gap-[3px]">
+            {weeksMobile.map((week, weekIndex) => {
+              // Obtener el mes de la primera semana para mostrar etiqueta
+              const firstDay = week[0]?.date;
+              let monthLabel = '';
+              if (firstDay) {
+                const [day, month, year] = firstDay.split('-');
+                const currentMonth = parseInt(month) - 1;
+                const prevWeek = weeksMobile[weekIndex - 1];
+                if (prevWeek && prevWeek[0]) {
+                  const [prevDay, prevMonth] = prevWeek[0].date.split('-');
+                  const prevMonthNum = parseInt(prevMonth) - 1;
+                  if (currentMonth !== prevMonthNum) {
+                    monthLabel = MONTHS[currentMonth];
+                  }
+                } else if (weekIndex === 0) {
+                  monthLabel = MONTHS[currentMonth];
+                }
+              }
+
+              return (
+                <div key={weekIndex} className="flex w-full items-center">
+                  {/* Etiqueta de mes */}
+                  <div className="w-10 flex-shrink-0 text-[9px] text-gray-400 text-right pr-2">
+                    {monthLabel}
+                  </div>
+
+                  {/* Días de la semana (fila) */}
+                  <div className="flex-1 grid grid-cols-7 gap-[3px]">
+                    {week.map((day, dayIndex) => {
+                      const ganados = day.resultados.filter(r => r === 1).length;
+                      const perdidos = day.resultados.filter(r => r === 0).length;
+                      const entrenamientos = day.resultados.filter(r => r === 2).length;
+                      const torneos = day.resultados.filter(r => r === 3).length;
+
+                      const titleParts = [];
+                      if (ganados > 0) titleParts.push(`Ganados: ${ganados}`);
+                      if (perdidos > 0) titleParts.push(`Perdidos: ${perdidos}`);
+                      if (entrenamientos > 0) titleParts.push(`Entrenamientos: ${entrenamientos}`);
+                      if (torneos > 0) titleParts.push(`Torneos: ${torneos}`);
+
+                      return (
+                        <motion.div
+                          key={day.date}
+                          custom={weekIndex * 7 + dayIndex}
+                          initial="hidden"
+                          animate="animate"
+                          variants={squareVariants}
+                          className="w-full aspect-square rounded-[2px] cursor-pointer hover:ring-1 hover:ring-white/40 transition-all duration-200"
+                          style={{
+                            background: day.resultados.length > 1
+                              ? `conic-gradient(${day.resultados.map((r, i) => `${COLOR_MAP[r] || '#6B7280'} ${(i / day.resultados.length) * 100}%, ${COLOR_MAP[r] || '#6B7280'} ${(i + 1) / day.resultados.length * 100}%`).join(", ")})`
+                              : day.resultados.length === 1
+                                ? COLOR_MAP[day.resultados[0]] || '#6B7280'
+                                : "#1a1a1a",
+                            border: day.resultados.length === 0 ? '1px solid #2a2a2a' : 'none',
+                          }}
+                          title={`${day.date}: ${day.played ? titleParts.join(", ") : "Sin Jugar"}`}
+                          onClick={() => openModal(day)}
+                        ></motion.div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
