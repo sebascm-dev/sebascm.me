@@ -203,7 +203,7 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
             </div>
 
             {/* Grid de semanas (columnas) */}
-            <div className="grid gap-[4px]" style={{ gridTemplateColumns: `repeat(${weeksDesktop.length}, 1fr)` }}>
+            <div className="grid mr-2 gap-[4px]" style={{ gridTemplateColumns: `repeat(${weeksDesktop.length}, 1fr)` }}>
               {weeksDesktop.map((week, weekIndex) => (
                 <div key={weekIndex} className="flex flex-col gap-[4px]">
                   {week.map((day, dayIndex) => {
