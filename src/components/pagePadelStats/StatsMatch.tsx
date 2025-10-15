@@ -1,8 +1,9 @@
 "use client"
 
 import { Sparkles, Medal, Share2 } from "lucide-react"
-import { useMemo, useEffect, useState } from "react"
+import { useMemo, useEffect, useState, useRef } from "react"
 import { motion, useMotionValue, useTransform, animate } from "framer-motion"
+import { toPng } from 'html-to-image'
 
 interface MatchPadel {
   fechaPartido: string
@@ -37,30 +38,118 @@ function AnimatedNumber({ value }: { value: number }) {
   return <motion.span>{rounded}</motion.span>
 }
 
-export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPadel[] }) {
-  const [isSharing, setIsSharing] = useState(false)
+// Función para obtener el color hex según el porcentaje
+function getColorHex(percentage: number): string {
+  if (percentage === 100) return "#facc15" // yellow-400
+  if (percentage >= 85) return "#4ade80" // green-400
+  if (percentage >= 65) return "#60a5fa" // blue-400
+  if (percentage >= 50) return "#22d3ee" // cyan-400
+  if (percentage >= 40) return "#fde047" // yellow-300
+  if (percentage >= 20) return "#fb923c" // orange-400
+  return "#f87171" // red-400
+}
 
-  // Función para compartir estadísticas
+// Componente para círculo de progreso (estático o animado)
+function ProgressCircle({ percentage, isStatic }: { percentage: number; isStatic: boolean }) {
+  const strokeDasharray = `${percentage * 2.2}, 220`
+  const colorClass = getColorByPercentage(percentage)
+  const colorHex = getColorHex(percentage)
+  
+  return (
+    <svg className="w-full h-full transform -rotate-90">
+      <circle
+        cx="40"
+        cy="40"
+        r="35"
+        fill="none"
+        stroke="#2E2D2D"
+        strokeWidth="5"
+      />
+      {isStatic ? (
+        <circle
+          cx="40"
+          cy="40"
+          r="35"
+          fill="none"
+          stroke={colorHex}
+          strokeWidth="5"
+          strokeLinecap="round"
+          strokeDasharray={strokeDasharray}
+        />
+      ) : (
+        <motion.circle
+          cx="40"
+          cy="40"
+          r="35"
+          fill="none"
+          className={colorClass}
+          strokeWidth="5"
+          strokeLinecap="round"
+          initial={{ strokeDasharray: "0, 220" }}
+          animate={{ strokeDasharray }}
+          transition={{ duration: 3 }}
+        />
+      )}
+    </svg>
+  )
+}
+
+export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPadel[] }) {
+  const [animationComplete, setAnimationComplete] = useState(false)
+  const [isCapturing, setIsCapturing] = useState(false)
+  const statsRef = useRef<HTMLDivElement>(null)
+
+  // Marcar animaciones como completadas después de 3 segundos
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setAnimationComplete(true)
+    }, 3000)
+    return () => clearTimeout(timer)
+  }, [])
+
+  // Función para compartir estadísticas como imagen
   const handleShare = async () => {
-    setIsSharing(true)
-    
-    const shareText = `🎾 Mis Estadísticas de Pádel\n\n📊 Totales: ${stats.totalWins}/${stats.totalGames}\n📈 Últimos 30: ${stats.last30Wins}/${stats.last30Games}\n🎯 Últimos 15: ${stats.last15Wins}/${stats.last15Games}\n\n💯 Eficacia Total: ${stats.totalWinRate}%\n📉 Eficacia Últimos 30: ${stats.last30WinRate}%\n📊 Eficacia Últimos 15: ${stats.last15WinRate}%\n\n🔥 Racha actual: ${stats.currentStreak} ${stats.currentStreak === 1 ? 'victoria' : 'victorias'}\n\n🌐 sebascm.me/padelstats`
+    if (!statsRef.current) return
     
     try {
-      if (navigator.share) {
+      // Ocultar el botón antes de capturar
+      setIsCapturing(true)
+      
+      // Esperar a que se oculte el botón
+      await new Promise(resolve => setTimeout(resolve, 50))
+      
+      const dataUrl = await toPng(statsRef.current, {
+        cacheBust: true,
+        backgroundColor: '#1C1C1C',
+        pixelRatio: 2,
+        skipFonts: false,
+      })
+
+      // Mostrar el botón de nuevo
+      setIsCapturing(false)
+
+      // Convertir dataUrl a blob
+      const response = await fetch(dataUrl)
+      const blob = await response.blob()
+      const file = new File([blob], 'estadisticas-padel.png', { type: 'image/png' })
+
+      // Intentar usar Web Share API si está disponible
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
         await navigator.share({
+          files: [file],
           title: 'Mis Estadísticas de Pádel',
-          text: shareText,
+          text: 'Mira mis estadísticas de pádel',
         })
       } else {
-        // Fallback: copiar al portapapeles
-        await navigator.clipboard.writeText(shareText)
-        alert('📋 Estadísticas copiadas al portapapeles')
+        // Fallback: descargar la imagen
+        const link = document.createElement('a')
+        link.download = 'estadisticas-padel.png'
+        link.href = dataUrl
+        link.click()
       }
     } catch (error) {
       console.error('Error al compartir:', error)
-    } finally {
-      setIsSharing(false)
+      setIsCapturing(false)
     }
   }
 
@@ -123,23 +212,24 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
   }, [matchpadel])
 
   return (
-    <div suppressHydrationWarning className="relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-full flex flex-col hover:border-[#EDEDED]/30 transition-colors duration-300">
+    <div ref={statsRef} suppressHydrationWarning className="relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-full flex flex-col hover:border-[#EDEDED]/30 transition-colors duration-300">
       <header className="flex flex-row gap-2 items-center justify-between mb-6">
         <div className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1">
           <Sparkles className="w-5 h-5 text-white" />
           <p className="mt-0.5 font-bold text-sm text-white">Estadísticas Generales</p>
         </div>
         
-        {/* Botón de compartir estilo Strava */}
-        <motion.button
-          onClick={handleShare}
-          disabled={isSharing}
-          whileHover={{ scale: 1.05 }}
-          whileTap={{ scale: 0.95 }}
-          className="group relative flex items-center justify-center w-8 h-8 rounded-lg bg-transparent border border-[#2E2D2D] hover:border-[#EDEDED]/50 transition-all duration-300 disabled:opacity-50"
-        >
-          <Share2 className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-300" />
-        </motion.button>
+        {/* Botón de compartir imagen */}
+        {!isCapturing && (
+          <motion.button
+            onClick={handleShare}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="group relative flex items-center justify-center w-8 h-8 rounded-lg bg-transparent border border-[#2E2D2D] hover:border-[#EDEDED]/50 transition-all duration-300"
+          >
+            <Share2 className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-300" />
+          </motion.button>
+        )}
       </header>
 
       <article className="flex flex-col gap-2 flex-1 justify-center">
@@ -152,10 +242,10 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
             </p>
             <div className="flex items-baseline justify-center gap-1">
               <span className="text-3xl font-bold text-white">
-                <AnimatedNumber value={stats.totalWins} />
+                {animationComplete ? stats.totalWins : <AnimatedNumber value={stats.totalWins} />}
               </span>
               <span className="text-sm text-gray-500 font-medium">
-                /<AnimatedNumber value={stats.totalGames} />
+                /{animationComplete ? stats.totalGames : <AnimatedNumber value={stats.totalGames} />}
               </span>
             </div>
           </div>
@@ -167,10 +257,10 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
             </p>
             <div className="flex items-baseline justify-center gap-1">
               <span className="text-3xl font-bold text-white">
-                <AnimatedNumber value={stats.last30Wins} />
+                {animationComplete ? stats.last30Wins : <AnimatedNumber value={stats.last30Wins} />}
               </span>
               <span className="text-sm text-gray-500 font-medium">
-                /<AnimatedNumber value={stats.last30Games} />
+                /{animationComplete ? stats.last30Games : <AnimatedNumber value={stats.last30Games} />}
               </span>
             </div>
           </div>
@@ -182,10 +272,10 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
             </p>
             <div className="flex items-baseline justify-center gap-1">
               <span className="text-3xl font-bold text-white">
-                <AnimatedNumber value={stats.last15Wins} />
+                {animationComplete ? stats.last15Wins : <AnimatedNumber value={stats.last15Wins} />}
               </span>
               <span className="text-sm text-gray-500 font-medium">
-                /<AnimatedNumber value={stats.last15Games} />
+                /{animationComplete ? stats.last15Games : <AnimatedNumber value={stats.last15Games} />}
               </span>
             </div>
           </div>
@@ -205,13 +295,13 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
                 key={level}
                 initial={{ scale: 0 }}
                 animate={{ 
-                  scale: stats.currentStreak >= 5 && stats.currentStreak >= level ? [1, 1.2, 1] : 1,
+                  scale: animationComplete ? 1 : (stats.currentStreak >= 5 && stats.currentStreak >= level ? [1, 1.2, 1] : 1),
                 }}
                 transition={{ 
                   delay: level * 0.1, 
                   type: "spring", 
                   stiffness: 200,
-                  repeat: stats.currentStreak >= 5 ? Infinity : 0,
+                  repeat: animationComplete ? 0 : (stats.currentStreak >= 5 ? Infinity : 0),
                   repeatDelay: 0.5,
                   duration: 0.6
                 }}
@@ -224,7 +314,7 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
                 }`}
               >
                 {/* Efecto de brillo para racha de 5 */}
-                {stats.currentStreak >= 5 && stats.currentStreak >= level && (
+                {stats.currentStreak >= 5 && stats.currentStreak >= level && !animationComplete && (
                   <motion.div
                     className="absolute inset-0 rounded-full bg-gradient-to-br from-yellow-300 to-orange-500"
                     animate={{
@@ -243,14 +333,14 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
           </div>
 
           {/* Texto de racha */}
-          <motion.p 
-            className="text-[8px] text-gray-400 uppercase tracking-wider relative z-10"
-            animate={{
-              color: stats.currentStreak >= 5 ? "#fb923c" : "#9ca3af"
+          <p 
+            className="text-[8px] uppercase tracking-wider relative z-10"
+            style={{ 
+              color: stats.currentStreak >= 5 ? "#fb923c" : "#9ca3af" 
             }}
           >
             Racha: {stats.currentStreak} {stats.currentStreak === 1 ? "victoria" : "victorias"}
-          </motion.p>
+          </p>
         </div>
 
         {/* Círculos de eficacia */}
@@ -272,12 +362,12 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
                 >
                   <motion.div
                     animate={{ 
-                      rotate: [0, -10, 10, -10, 0],
-                      scale: [1, 1.1, 1]
+                      rotate: animationComplete ? 0 : [0, -10, 10, -10, 0],
+                      scale: animationComplete ? 1 : [1, 1.1, 1]
                     }}
                     transition={{ 
                       duration: 2,
-                      repeat: Infinity,
+                      repeat: animationComplete ? 0 : Infinity,
                       repeatDelay: 3
                     }}
                   >
@@ -286,32 +376,11 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
                 </motion.div>
               ) : (
                 <>
-                  <svg className="w-full h-full transform -rotate-90">
-                    <circle
-                      cx="40"
-                      cy="40"
-                      r="35"
-                      fill="none"
-                      className="stroke-[#2E2D2D]"
-                      strokeWidth="5"
-                    />
-                    <motion.circle
-                      cx="40"
-                      cy="40"
-                      r="35"
-                      fill="none"
-                      className={getColorByPercentage(stats.totalWinRate)}
-                      strokeWidth="5"
-                      strokeLinecap="round"
-                      initial={{ strokeDasharray: "0, 220" }}
-                      animate={{ strokeDasharray: `${stats.totalWinRate * 2.2}, 220` }}
-                      transition={{ duration: 3 }}
-                    />
-                  </svg>
+                  <ProgressCircle percentage={stats.totalWinRate} isStatic={animationComplete} />
 
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-lg font-bold text-white">
-                      <AnimatedNumber value={stats.totalWinRate} />%
+                      {animationComplete ? stats.totalWinRate : <AnimatedNumber value={stats.totalWinRate} />}%
                     </span>
                     <span className="text-[7px] text-gray-400 uppercase tracking-wider">
                       Eficacia
@@ -342,12 +411,12 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
                 >
                   <motion.div
                     animate={{ 
-                      rotate: [0, -10, 10, -10, 0],
-                      scale: [1, 1.1, 1]
+                      rotate: animationComplete ? 0 : [0, -10, 10, -10, 0],
+                      scale: animationComplete ? 1 : [1, 1.1, 1]
                     }}
                     transition={{ 
                       duration: 2,
-                      repeat: Infinity,
+                      repeat: animationComplete ? 0 : Infinity,
                       repeatDelay: 3
                     }}
                   >
@@ -356,32 +425,11 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
                 </motion.div>
               ) : (
                 <>
-                  <svg className="w-full h-full transform -rotate-90">
-                    <circle
-                      cx="40"
-                      cy="40"
-                      r="35"
-                      fill="none"
-                      className="stroke-[#2E2D2D]"
-                      strokeWidth="5"
-                    />
-                    <motion.circle
-                      cx="40"
-                      cy="40"
-                      r="35"
-                      fill="none"
-                      className={getColorByPercentage(stats.last30WinRate)}
-                      strokeWidth="5"
-                      strokeLinecap="round"
-                      initial={{ strokeDasharray: "0, 220" }}
-                      animate={{ strokeDasharray: `${stats.last30WinRate * 2.2}, 220` }}
-                      transition={{ duration: 3 }}
-                    />
-                  </svg>
+                  <ProgressCircle percentage={stats.last30WinRate} isStatic={animationComplete} />
 
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-lg font-bold text-white">
-                      <AnimatedNumber value={stats.last30WinRate} />%
+                      {animationComplete ? stats.last30WinRate : <AnimatedNumber value={stats.last30WinRate} />}%
                     </span>
                     <span className="text-[7px] text-gray-400 uppercase tracking-wider">
                       Eficacia
@@ -412,12 +460,12 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
                 >
                   <motion.div
                     animate={{ 
-                      rotate: [0, -10, 10, -10, 0],
-                      scale: [1, 1.1, 1]
+                      rotate: animationComplete ? 0 : [0, -10, 10, -10, 0],
+                      scale: animationComplete ? 1 : [1, 1.1, 1]
                     }}
                     transition={{ 
                       duration: 2,
-                      repeat: Infinity,
+                      repeat: animationComplete ? 0 : Infinity,
                       repeatDelay: 3
                     }}
                   >
@@ -426,32 +474,11 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
                 </motion.div>
               ) : (
                 <>
-                  <svg className="w-full h-full transform -rotate-90">
-                    <circle
-                      cx="40"
-                      cy="40"
-                      r="35"
-                      fill="none"
-                      className="stroke-[#2E2D2D]"
-                      strokeWidth="5"
-                    />
-                    <motion.circle
-                      cx="40"
-                      cy="40"
-                      r="35"
-                      fill="none"
-                      className={getColorByPercentage(stats.last15WinRate)}
-                      strokeWidth="5"
-                      strokeLinecap="round"
-                      initial={{ strokeDasharray: "0, 220" }}
-                      animate={{ strokeDasharray: `${stats.last15WinRate * 2.2}, 220` }}
-                      transition={{ duration: 3 }}
-                    />
-                  </svg>
+                  <ProgressCircle percentage={stats.last15WinRate} isStatic={animationComplete} />
 
                   <div className="absolute inset-0 flex flex-col items-center justify-center">
                     <span className="text-lg font-bold text-white">
-                      <AnimatedNumber value={stats.last15WinRate} />%
+                      {animationComplete ? stats.last15WinRate : <AnimatedNumber value={stats.last15WinRate} />}%
                     </span>
                     <span className="text-[7px] text-gray-400 uppercase tracking-wider">
                       Eficacia

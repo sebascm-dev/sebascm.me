@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { Volleyball } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Volleyball, Share2 } from "lucide-react";
 import { motion } from "framer-motion";
 import Modal from 'react-modal';
 import ResultsMatch from './ResultsMatch';
+import { toPng } from 'html-to-image';
 
 type DayStatus = {
   date: string;
@@ -64,6 +65,8 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
   const [days, setDays] = useState<DayStatus[]>([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [selectedDay, setSelectedDay] = useState<DayStatus | null>(null);
+  const [isCapturing, setIsCapturing] = useState(false);
+  const trackerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!matchpadel || !Array.isArray(matchpadel) || matchpadel.length === 0) {
@@ -128,6 +131,51 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
     setSelectedDay(null);
   };
 
+  const handleShare = async () => {
+    if (!trackerRef.current) return;
+
+    try {
+      // Ocultar el botón antes de capturar
+      setIsCapturing(true);
+      
+      // Esperar a que se oculte el botón
+      await new Promise(resolve => setTimeout(resolve, 50));
+      
+      const dataUrl = await toPng(trackerRef.current, {
+        cacheBust: true,
+        backgroundColor: '#1C1C1C',
+        pixelRatio: 2,
+        skipFonts: false,
+      });
+
+      // Mostrar el botón de nuevo
+      setIsCapturing(false);
+
+      // Convertir dataUrl a blob
+      const response = await fetch(dataUrl);
+      const blob = await response.blob();
+      const file = new File([blob], 'padel-tracker.png', { type: 'image/png' });
+
+      // Intentar usar Web Share API si está disponible
+      if (navigator.share && navigator.canShare?.({ files: [file] })) {
+        await navigator.share({
+          files: [file],
+          title: 'Mi Padel Tracker',
+          text: 'Mira mi seguimiento de partidos de pádel',
+        });
+      } else {
+        // Fallback: descargar la imagen
+        const link = document.createElement('a');
+        link.download = 'padel-tracker.png';
+        link.href = dataUrl;
+        link.click();
+      }
+    } catch (error) {
+      console.error('Error al compartir:', error);
+      setIsCapturing(false);
+    }
+  };
+
   // Organizar días en semanas (cada semana = 7 días en columna, empezando en lunes)
   const allWeeks = [];
   for (let i = 0; i < days.length; i += 7) {
@@ -161,10 +209,21 @@ export default function PadelTracker({ matchpadel = [] }: { matchpadel: MatchPad
   });
 
   return (
-    <div className="relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-full flex flex-col hover:border-[#EDEDED]/30 transition-colors duration-300">
-      <header className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1 mb-6">
-        <Volleyball className="w-5 h-5 text-white" />
-        <p className="mt-0.5 font-bold text-sm text-white">Padel Game Tracker</p>
+    <div ref={trackerRef} className="relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-full flex flex-col hover:border-[#EDEDED]/30 transition-colors duration-300">
+      <header className="flex flex-row gap-2 items-center justify-between mb-6">
+        <div className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1">
+          <Volleyball className="w-5 h-5 text-white" />
+          <p className="mt-0.5 font-bold text-sm text-white">Padel Game Tracker</p>
+        </div>
+        {!isCapturing && (
+          <button
+            onClick={handleShare}
+            className="p-2 rounded-lg border border-[#2E2D2D] bg-[#1C1C1C]/50 hover:bg-[#2E2D2D]/50 transition-colors duration-200 group"
+            title="Compartir marcador"
+          >
+            <Share2 className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-200" />
+          </button>
+        )}
       </header>
 
       <p className="mb-4 text-sm text-gray-100/50 border-l-2 border-white/70 px-1.5 h-5">
