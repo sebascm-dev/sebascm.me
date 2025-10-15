@@ -194,7 +194,7 @@ export default function ResultsMatch({ matchpadel = [] }: { matchpadel: MatchPad
                         </div>
 
                         {/* Sets */}
-                        <div className={`flex justify-center items-center ${isCapturing ? 'ml-4' : ''}`}>
+                        <div className={`flex justify-center items-center ${isCapturing ? 'ml-8' : ''}`}>
                             {rawSets.map((set, index) => {
                                 const [score1, score2] = parseSet(set)
                                 // Convertir a número para comparar
