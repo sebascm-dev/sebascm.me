@@ -1,7 +1,7 @@
 "use client"
 
-import { Sparkles, Medal } from "lucide-react"
-import { useMemo, useEffect } from "react"
+import { Sparkles, Medal, Share2 } from "lucide-react"
+import { useMemo, useEffect, useState } from "react"
 import { motion, useMotionValue, useTransform, animate } from "framer-motion"
 
 interface MatchPadel {
@@ -38,6 +38,32 @@ function AnimatedNumber({ value }: { value: number }) {
 }
 
 export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPadel[] }) {
+  const [isSharing, setIsSharing] = useState(false)
+
+  // Función para compartir estadísticas
+  const handleShare = async () => {
+    setIsSharing(true)
+    
+    const shareText = `🎾 Mis Estadísticas de Pádel\n\n📊 Totales: ${stats.totalWins}/${stats.totalGames}\n📈 Últimos 30: ${stats.last30Wins}/${stats.last30Games}\n🎯 Últimos 15: ${stats.last15Wins}/${stats.last15Games}\n\n💯 Eficacia Total: ${stats.totalWinRate}%\n📉 Eficacia Últimos 30: ${stats.last30WinRate}%\n📊 Eficacia Últimos 15: ${stats.last15WinRate}%\n\n🔥 Racha actual: ${stats.currentStreak} ${stats.currentStreak === 1 ? 'victoria' : 'victorias'}\n\n🌐 sebascm.me/padelstats`
+    
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'Mis Estadísticas de Pádel',
+          text: shareText,
+        })
+      } else {
+        // Fallback: copiar al portapapeles
+        await navigator.clipboard.writeText(shareText)
+        alert('📋 Estadísticas copiadas al portapapeles')
+      }
+    } catch (error) {
+      console.error('Error al compartir:', error)
+    } finally {
+      setIsSharing(false)
+    }
+  }
+
   // Calculamos las estadísticas de forma dinámica
   const stats = useMemo(() => {
     // 1. Filtramos solo los partidos (ganados o perdidos)
@@ -98,9 +124,22 @@ export default function StatsWidget({ matchpadel = [] }: { matchpadel: MatchPade
 
   return (
     <div suppressHydrationWarning className="relative border border-[#2E2D2D] rounded-md p-4 bg-[#1C1C1C]/50 shadow-lg backdrop-blur-[2px] h-full flex flex-col hover:border-[#EDEDED]/30 transition-colors duration-300">
-      <header className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1 mb-6">
-        <Sparkles className="w-5 h-5 text-white" />
-        <p className="mt-0.5 font-bold text-sm text-white">Estadísticas Generales</p>
+      <header className="flex flex-row gap-2 items-center justify-between mb-6">
+        <div className="flex flex-row gap-2 items-center border border-[#2E2D2D] rounded-2xl w-fit px-3 py-1">
+          <Sparkles className="w-5 h-5 text-white" />
+          <p className="mt-0.5 font-bold text-sm text-white">Estadísticas Generales</p>
+        </div>
+        
+        {/* Botón de compartir estilo Strava */}
+        <motion.button
+          onClick={handleShare}
+          disabled={isSharing}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          className="group relative flex items-center justify-center w-8 h-8 rounded-lg bg-transparent border border-[#2E2D2D] hover:border-[#EDEDED]/50 transition-all duration-300 disabled:opacity-50"
+        >
+          <Share2 className="w-4 h-4 text-gray-400 group-hover:text-white transition-colors duration-300" />
+        </motion.button>
       </header>
 
       <article className="flex flex-col gap-2 flex-1 justify-center">
